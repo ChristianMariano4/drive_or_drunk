@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage>
@@ -40,6 +40,12 @@ class _LoginPageState extends State<LoginPage>
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
@@ -63,24 +69,6 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        // extendBodyBehindAppBar: true,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.transparent,
-        //   elevation: 0,
-        //   // title: const Text('Login'),
-        //   actions: [
-        //     IconButton(
-        //       icon: Icon(
-        //           context.watch<ThemeProvider>().themeMode == ThemeMode.light
-        //               ? Icons.dark_mode
-        //               : Icons.light_mode),
-        //       onPressed: () {
-        //         context.read<ThemeProvider>().toggleTheme();
-        //       },
-        //     ),
-        //   ],
-        // ),
         body: SafeArea(
             child: SingleChildScrollView(
       child: Column(children: [

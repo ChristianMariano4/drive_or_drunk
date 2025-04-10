@@ -6,20 +6,18 @@ class Comment {
   final DocumentReference author;
   final String text;
   final Timestamp? timestamp;
-  final double rating;
 
-  Comment(
-      {required this.author,
-      required this.text,
-      this.timestamp,
-      required this.rating});
+  Comment({
+    required this.author,
+    required this.text,
+    this.timestamp,
+  });
 
   factory Comment.fromMap(Map<String, dynamic> data) {
     return Comment(
         author: data['author'],
         text: data['text'],
-        timestamp: data['timestamp'] ?? Timestamp.now(),
-        rating: data['rating']);
+        timestamp: data['timestamp'] ?? Timestamp.now());
   }
 
   Map<String, dynamic> toMap() {
@@ -27,7 +25,6 @@ class Comment {
       'author': author,
       'text': text,
       'timestamp': timestamp,
-      'rating': rating,
     };
   }
 }
@@ -42,12 +39,14 @@ class Review {
   final DocumentReference author;
   final List<Comment> comments;
   final String type;
+  final double rating;
 
   Review(
       {this.id,
       required this.author,
       required this.type,
-      this.comments = const []});
+      this.comments = const [],
+      required this.rating});
 
   factory Review.fromMap(Map<String, dynamic> data, String documentId) {
     return Review(
@@ -56,7 +55,8 @@ class Review {
         type: data['type'],
         comments: List<Comment>.from((data['comments'] as List<dynamic>? ?? [])
             .map((comment) => Comment.fromMap(comment))
-            .toList()));
+            .toList()),
+        rating: (data['rating'] as num).toDouble());
   }
 
   Map<String, dynamic> toMap() {
@@ -64,6 +64,7 @@ class Review {
       'author': author,
       'comments': comments.map((comment) => comment.toMap()).toList(),
       'type': type,
+      'rating': rating,
     };
   }
 }

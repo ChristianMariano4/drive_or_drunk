@@ -42,6 +42,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -147,7 +148,7 @@ class HomePage extends StatelessWidget {
                   return ListTile(
                       title: Text('Review with id: ${review.id}'),
                       subtitle: Text(
-                          'Type: ${review.type} Comment length: ${review.comments.length}'),
+                          'Type: ${review.type} Comment length: ${review.comments.length} Rating: ${review.rating}'),
                       trailing: IconButton(
                           icon: const Icon(Icons.add_comment),
                           onPressed: () async {
