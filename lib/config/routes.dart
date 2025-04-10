@@ -1,7 +1,8 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
-import 'package:drive_or_drunk_app/navigation_menu.dart' show NavigationMenu;
+import 'package:drive_or_drunk_app/features/profilepage.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
   static const register = '/register';
+  static const String profile = '/profile';
   static const navMenu = '/navigation';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -56,6 +58,10 @@ class AppRoutes {
       case register:
         return authenticatedRoute(
             builder: (_) => const RegisterPage(), routeName: register);
+      case profile:
+        final user = settings.arguments as user_model.User;
+        return authenticatedRoute(
+            builder: (_) => ProfilePage(owner: user), routeName: profile);
       case navMenu:
         return authenticatedRoute(
             builder: (_) => const NavigationMenu(), routeName: navMenu);

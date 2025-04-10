@@ -7,11 +7,7 @@ class Comment {
   final String text;
   final Timestamp? timestamp;
 
-  Comment({
-    required this.author,
-    required this.text,
-    this.timestamp,
-  });
+  Comment({required this.author, required this.text, this.timestamp});
 
   factory Comment.fromMap(Map<String, dynamic> data) {
     return Comment(
@@ -38,6 +34,7 @@ class Review {
   final String? id;
   final DocumentReference author;
   final List<Comment> comments;
+  final String text;
   final String type;
   final double rating;
 
@@ -45,6 +42,7 @@ class Review {
       {this.id,
       required this.author,
       required this.type,
+      required this.text,
       this.comments = const [],
       required this.rating});
 
@@ -53,6 +51,7 @@ class Review {
         id: documentId,
         author: data['author'],
         type: data['type'],
+        text: data['text'],
         comments: List<Comment>.from((data['comments'] as List<dynamic>? ?? [])
             .map((comment) => Comment.fromMap(comment))
             .toList()),
@@ -66,6 +65,11 @@ class Review {
       'type': type,
       'rating': rating,
     };
+  }
+
+  Future<Map<String, dynamic>> getAuthor(FirebaseFirestore db) async {
+    final authorDoc = await author.get();
+    return authorDoc.data() as Map<String, dynamic>;
   }
 }
 
