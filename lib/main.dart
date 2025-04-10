@@ -50,8 +50,8 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Drive or Drunk',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       themeMode:
           themeProvider.themeMode, // Dynamically respond to theme changes
       initialRoute: AppRoutes.home,
