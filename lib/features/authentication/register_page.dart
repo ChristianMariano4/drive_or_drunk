@@ -33,6 +33,7 @@ class _RegisterPageState extends State<RegisterPage>
         await context.read<AuthProvider>().signUp(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
+              displayName: _nameController.text.trim(),
             );
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       } catch (e) {
@@ -111,16 +112,11 @@ class _RegisterPageState extends State<RegisterPage>
                       CustomTextFormField(
                         controller: _phoneController,
                         labelText: "Phone",
-                        validator: (value) =>
-                            value!.isEmpty ? 'Please enter a phone' : null,
                       ),
                       const SizedBox(height: 24),
                       CustomTextFormField(
                         controller: _dateController,
                         labelText: "Date of birth",
-                        validator: (value) => value!.isEmpty
-                            ? 'Please enter a date of birth'
-                            : null,
                       ),
                       const SizedBox(height: 24),
                       CustomTextFormField(

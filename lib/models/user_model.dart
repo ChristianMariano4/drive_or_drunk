@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show DocumentReference, FirebaseException, FirebaseFirestore;
+    show DocumentReference, FirebaseFirestore;
 import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
 
 class User {
   final String? id;
   final String name;
   final String username;
+  final String email;
   final bool isVerified;
-  final int age;
+  final int? age;
   final String? profilePicture;
   final List<DocumentReference> registeredEvents;
   final List<DocumentReference> favoriteEvents;
@@ -18,8 +19,9 @@ class User {
     this.id,
     required this.name,
     this.isVerified = false,
-    required this.age,
+    this.age,
     required this.username,
+    required this.email,
     this.profilePicture,
     this.registeredEvents = const [],
     this.favoriteEvents = const [],
@@ -31,6 +33,7 @@ class User {
       id: documentId,
       name: data['name'] ?? '',
       username: data['username'] ?? '',
+      email: data['email'] ?? '',
       isVerified: data['isVerified'] ?? false,
       age: data['age'] ?? 0,
       profilePicture: data['profilePicture'],
@@ -46,6 +49,7 @@ class User {
     return {
       'name': name,
       'username': username,
+      'email': email,
       'isVerified': isVerified,
       'age': age,
       'profilePicture': profilePicture,
@@ -65,10 +69,7 @@ Future<void> addUser(User user, FirebaseFirestore db) async {
   if (user.id == null) {
     db.collection(Collections.users).add(user.toMap());
   } else {
-    throw FirebaseException(
-      plugin: 'Firestore',
-      message: 'A user with that ID already exists.',
-    );
+    db.collection(Collections.users).doc(user.id).set(user.toMap());
   }
 }
 

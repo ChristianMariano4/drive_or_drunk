@@ -54,10 +54,10 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   // Create a example user on the database
                   final user = user_model.User(
-                    name: 'John Doe',
-                    username: 'johndoe',
-                    age: 25,
-                  );
+                      name: 'John Doe',
+                      username: 'johndoe',
+                      age: 25,
+                      email: "johndoe@example.com");
                   _firestoreService.addUser(user);
                 },
                 child: const Text('Create User'),
@@ -152,7 +152,6 @@ class HomePage extends StatelessWidget {
                       trailing: IconButton(
                           icon: const Icon(Icons.add_comment),
                           onPressed: () async {
-                            // TODO: this is the wrong ID for author
                             final author = await _firestoreService
                                 .getUserReference(user?.uid ?? '');
                             _firestoreService.addCommentToReview(

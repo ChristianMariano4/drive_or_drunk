@@ -1,4 +1,7 @@
 import 'package:drive_or_drunk_app/features/authentication/auth_repository.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:drive_or_drunk_app/services/firestore_service.dart'
+    show FirestoreService;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -9,6 +12,7 @@ class AuthProvider extends ChangeNotifier {
 
   User? get currentUser => _authRepository.currentUser;
   Stream<User?> get authStateChanges => _authRepository.authStateChanges;
+  final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> signUp({
     required String email,
@@ -16,8 +20,16 @@ class AuthProvider extends ChangeNotifier {
     String? displayName,
   }) async {
     try {
-      await _authRepository.signUp(
+      final newUser = await _authRepository.signUp(
           email: email, password: password, displayName: displayName);
+
+      await _firestoreService.addUser(user_model.User(
+        id: newUser!.uid,
+        email: newUser.email!,
+        username: displayName ?? '',
+        name: displayName ?? '',
+      ));
+
       notifyListeners();
     } catch (e) {
       rethrow;
