@@ -1,2 +1,0 @@
-/home/armaf/flutter_app/android/app/.cxx/Debug/l6v3b454/x86/CMakeFiles/edit_cache.dir
-/home/armaf/flutter_app/android/app/.cxx/Debug/l6v3b454/x86/CMakeFiles/rebuild_cache.dir
