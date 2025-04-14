@@ -18,6 +18,7 @@ dependencies:
   provider: ^6.1.2
   flex_color_scheme: ^8.1.1
   flutter_native_splash: ^2.4.4
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +29,8 @@ flutter:
   uses-material-design: true
   assets:
   - assets/logos/logo_android12.png
+  - assets/homepage_img.png
+  - assets/homepage_img2.png
+  - assets/events/event1.png
+  - assets/events/event2.png
+  - assets/events/event3.png

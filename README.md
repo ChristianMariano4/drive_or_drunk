@@ -6,3 +6,4 @@ A new Flutter project.
 ## THEME
 
 <https://rydmike.com/flexcolorscheme/themesplayground-latest/>
+- Bahama and trinidad theme

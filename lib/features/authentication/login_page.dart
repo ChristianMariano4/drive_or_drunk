@@ -1,5 +1,5 @@
 import 'package:drive_or_drunk_app/config/routes.dart';
-import 'package:drive_or_drunk_app/core/theme/app_colors.dart';
+import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage>
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
             );
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        Navigator.pushReplacementNamed(context, AppRoutes.navMenu);
       } catch (e) {
         // Show error
         ScaffoldMessenger.of(context).showSnackBar(

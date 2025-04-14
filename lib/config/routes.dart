@@ -1,6 +1,7 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
+import 'package:drive_or_drunk_app/navigation_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,7 @@ class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
   static const register = '/register';
+  static const navMenu = '/navigation';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Custom route wrapper that checks authentication
@@ -22,7 +24,7 @@ class AppRoutes {
               final currentUser = snapshot.data;
               // If no user is logged in and trying to access home, redirect to login
               if (currentUser == null && routeName == home) {
-                return LoginPage();
+                return const LoginPage();
               }
 
               // If user is logged in and trying to access login, redirect to home
@@ -46,10 +48,13 @@ class AppRoutes {
             builder: (_) => const HomePage(), routeName: home);
       case login:
         return authenticatedRoute(
-            builder: (_) => LoginPage(), routeName: login);
+            builder: (_) => const LoginPage(), routeName: login);
       case register:
         return authenticatedRoute(
-            builder: (_) => RegisterPage(), routeName: register);
+            builder: (_) => const RegisterPage(), routeName: register);
+      case navMenu:
+        return authenticatedRoute(
+            builder: (_) => const NavigationMenu(), routeName: navMenu);
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
