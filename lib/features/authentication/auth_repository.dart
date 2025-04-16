@@ -1,5 +1,6 @@
 import 'package:drive_or_drunk_app/features/authentication/firebase_auth_datasource.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthRepository {
   Future<User?> signUp({
@@ -13,7 +14,7 @@ abstract class AuthRepository {
     required String password,
   });
 
-  // Future<User?> signInWithGoogle();
+  Future<User?> signInWithGoogle();
   // Future<User?> signInWithFacebook();
   Future<void> resetPassword(String email);
   Future<void> signOut();
@@ -43,8 +44,23 @@ class AuthRepositoryImpl implements AuthRepository {
   }) =>
       _authDataSource.signIn(email: email, password: password);
 
-  // @override
-  // Future<User?> signInWithGoogle() => _authDataSource.signInWithGoogle();
+  @override
+  Future<User?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return userCredential.user;
+  }
 
   // @override
   // Future<User?> signInWithFacebook() => _authDataSource.signInWithFacebook();

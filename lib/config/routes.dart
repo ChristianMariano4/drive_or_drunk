@@ -1,9 +1,13 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
-import 'package:drive_or_drunk_app/navigation_menu.dart';
+import 'package:drive_or_drunk_app/navigation_menu.dart' show NavigationMenu;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 class AppRoutes {
   static const String home = '/';

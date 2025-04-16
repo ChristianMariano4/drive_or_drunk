@@ -35,10 +35,10 @@ class _RegisterPageState extends State<RegisterPage>
               password: _passwordController.text.trim(),
               displayName: _nameController.text.trim(),
             );
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        navigatorKey.currentState?.popUntil((route) => route.isFirst);
+        navigatorKey.currentState?.pushNamed(AppRoutes.home);
       } catch (e) {
-        // Show error
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(content: Text(e.toString())),
         );
       } finally {

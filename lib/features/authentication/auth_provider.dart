@@ -48,14 +48,20 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Future<void> signInWithGoogle() async {
-  //   try {
-  //     await _authRepository.signInWithGoogle();
-  //     notifyListeners();
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+  Future<void> signInWithGoogle() async {
+    try {
+      final newUser = await _authRepository.signInWithGoogle();
+      await _firestoreService.addUser(user_model.User(
+        id: newUser!.uid,
+        email: newUser.email!,
+        username: newUser.displayName ?? '',
+        name: newUser.displayName ?? '',
+      ));
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   // Future<void> signInWithFacebook() async {
   //   try {
