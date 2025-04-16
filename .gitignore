@@ -59,6 +59,3 @@ firepit-log.txt
 
 # Ignore .lock files
 **/*.lock
-
-# Ignore settings.gradle
-settings.gradle
