@@ -1,7 +1,6 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
-import 'package:drive_or_drunk_app/widgets/home_page/form_filter.dart';
 import 'package:flutter/material.dart';
 
 class UserSearchForm extends StatelessWidget {
@@ -36,8 +35,6 @@ class UserSearchForm extends StatelessWidget {
           Row(
             children: [
               // Place Filter
-              // const FormFilter(labelText: "Select Place", icon: Icons.place),
-
               Expanded(
                 child: TextField(
                   readOnly: true,
@@ -72,11 +69,6 @@ class UserSearchForm extends StatelessWidget {
                   ),
                 ),
               ),
-              // Date Filter
-              // const FormFilter(
-              //   labelText: "Pick a Date",
-              //   icon: Icons.calendar_today,
-              // ),
             ],
           ),
 

@@ -40,23 +40,6 @@ class _DatePickerState extends State<DatePicker> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Column(
-  //     mainAxisSize: MainAxisSize.min,
-  //     spacing: 20,
-  //     children: <Widget>[
-  //       Text(
-  //         selectedDate != null
-  //             ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-  //             : 'No date selected',
-  //       ),
-  //       OutlinedButton(
-  //           onPressed: _selectDate, child: const Text('Select Date')),
-  //     ],
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
