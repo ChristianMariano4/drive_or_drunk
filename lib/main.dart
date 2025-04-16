@@ -7,8 +7,8 @@ import 'package:drive_or_drunk_app/features/authentication/firebase_auth_datasou
 import 'package:drive_or_drunk_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +55,9 @@ class MainApp extends StatelessWidget {
       themeMode:
           themeProvider.themeMode, // Dynamically respond to theme changes
       initialRoute: AppRoutes.home,
+      navigatorKey: navigatorKey,
       onGenerateRoute: AppRoutes.generateRoute,
+      scaffoldMessengerKey: scaffoldMessengerKey,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
 import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -56,8 +57,7 @@ class _LoginPageState extends State<LoginPage>
             );
         Navigator.pushReplacementNamed(context, AppRoutes.navMenu);
       } catch (e) {
-        // Show error
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(content: Text(e.toString())),
         );
       } finally {
@@ -153,15 +153,23 @@ class _LoginPageState extends State<LoginPage>
                           ),
                         ],
                       ),
-
-                      // ElevatedButton(
-                      //   onPressed: _isLoading
-                      //       ? null
-                      //       : () {
-                      //           context.read<AuthProvider>().signInWithGoogle();
-                      //         },
-                      //   child: Text('Sign in with Google'),
-                      // ),
+                      ElevatedButton.icon(
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                context.read<AuthProvider>().signInWithGoogle();
+                              },
+                        icon: SvgPicture.asset(
+                          'assets/icons/google_logo.svg',
+                          height: 24,
+                          width: 24,
+                        ),
+                        label: const Text('Sign in with Google'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                        ),
+                      ),
                       // ElevatedButton(
                       //   onPressed: _isLoading
                       //       ? null
