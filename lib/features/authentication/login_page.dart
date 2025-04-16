@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage>
         ClipPath(
           clipper: WavyClipper(),
           child: Container(
-            color: AppColors.blue, //TODO: fix color
+            color: AppColors.primaryColor,
             child: AnimatedBuilder(
                 animation: _animation,
                 builder: (context, child) {

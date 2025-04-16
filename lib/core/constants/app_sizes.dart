@@ -16,6 +16,7 @@ class AppSizes {
   static const double fontSizeSm = 14.0;
   static const double fontSizeMd = 16.0;
   static const double fontSizeLg = 18.0;
+  static const double fontSizeXl = 24.0;
 
   // button sizes
   static const double buttonHeight = 18.0;
@@ -26,8 +27,8 @@ class AppSizes {
   static const double appBarHeight = 56.0;
 
   // Default spacing between sections
-  static const double defaultSpace = 24.0;
-  static const double spaceBtwItems = 16.0;
+  static const double defaultSpace = 18.0;
+  static const double spaceBtwItems = 12.0;
   static const double spaceBtwSections = 32.0;
 
   // Border radius
@@ -56,6 +57,11 @@ class AppSizes {
 
   // Image carousel height
   static const double imageCarouselHeight = 200.0;
+
+  // Search form in home page
+  static const double searchFormHeight = 234.0;
+  static const double horizontalPadding = 12.0;
+  static const double verticalPadding = 14.0;
 
   // Loading indicator size
   static const double loadingIndicatorSize = 36.0;
