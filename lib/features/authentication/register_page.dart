@@ -138,7 +138,8 @@ class _RegisterPageState extends State<RegisterPage>
                       const SizedBox(height: 36),
                       CustomElevatedButton(
                         onPressed: _isLoading ? null : _register,
-                        labelText: 'Sign up',
+                        child: const Text('Sign up',
+                            style: TextStyle(fontSize: 25)),
                       ),
                       const SizedBox(height: 24),
                       Row(

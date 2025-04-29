@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drive_or_drunk_app/models/user_model.dart';
+import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:drive_or_drunk_app/widgets/profile_ratingcard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
   final FirebaseFirestore db = FirebaseFirestore.instance;
-  final User owner;
+  final user_model.User owner;
 
   ProfilePage({super.key, required this.owner});
 
@@ -19,9 +23,18 @@ class ProfilePage extends StatelessWidget {
         title: const Text('Profile'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.star_border),
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+          ),
+          IconButton(
+            icon: Icon(
+                context.watch<ThemeProvider>().themeMode == ThemeMode.light
+                    ? Icons.dark_mode
+                    : Icons.light_mode),
             onPressed: () {
-              // Add any additional functionality
+              context.read<ThemeProvider>().toggleTheme();
             },
           ),
         ],
@@ -50,79 +63,118 @@ class ProfilePage extends StatelessWidget {
                 data.length > 3 && data[3] is double ? data[3] as double : 0.0;
             return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 10,
                 children: [
-                  //Image(image: image),
-                  Text('${owner.name} \n Age: ${owner.age}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      //Add navigation functionality
-                    },
-                    child: const Row(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: FilledButton.tonal(
+                      onPressed: () {
+                        // Add navigation functionality
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          spacing: 5,
+                          children: [
+                            Text("Available Rides",
+                                style: TextStyle(fontSize: 20)),
+                            Icon(Icons.arrow_forward_ios),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Available Rides"),
-                        Icon(Icons.arrow_forward_ios),
+                        CircleAvatar(
+                            radius: 60,
+                            backgroundImage: owner.profilePicture == null
+                                ? NetworkImage(owner.profilePicture!)
+                                : const AssetImage('assets/logos/logo_test.png')
+                                    as ImageProvider),
                       ],
                     ),
                   ),
-                  Card(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Text("Driver Reviews"),
-                            Text(
-                                "Average rating : ${averageDriverRating.toString()}/5.0"),
-                          ],
-                        ),
-                        if (firstDriver != null)
-                          FutureBuilder<Map<String, dynamic>?>(
-                            future: firstDriver.getAuthor(db),
-                            builder: (context, authorSnapshot) {
-                              if (authorSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (authorSnapshot.hasError) {
-                                return Text('Error: ${authorSnapshot.error}');
-                              } else {
-                                final author = authorSnapshot.data;
-                                return Text(
-                                    '/n${author?["name"] ?? "Unknown"} \n Rating: ${firstDriver.rating}/5.0 \n\n ${firstDriver.text}');
-                              }
-                            },
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Align(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      owner.name.length <= 20
+                                          ? owner.name.toUpperCase()
+                                          : "${owner.name.substring(0, 18).toUpperCase()}...",
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(fontSize: 26)),
+                                  Text(owner.age.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(fontSize: 26))
+                                ]),
                           ),
-                      ],
-                    ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom: 40,
+                                right: owner.name.length >= 12
+                                    ? 0
+                                    : MediaQuery.of(context).size.width * 0.15),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: IconButton(
+                                  icon: const Icon(Icons.star_border),
+                                  iconSize: 40,
+                                  onPressed: () => {}),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 40,
+                                right: owner.name.length >= 12
+                                    ? 0
+                                    : MediaQuery.of(context).size.width * 0.15),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: IconButton(
+                                  icon: const Icon(Icons.chat_rounded),
+                                  iconSize: 36,
+                                  onPressed: () => {}),
+                            ),
+                          )
+                        ],
+                      ),
+                      // Text(owner.age.toString(),
+                      //     style: Theme.of(context)
+                      //         .textTheme
+                      //         .labelLarge
+                      //         ?.copyWith(fontSize: 26)),
+                    ],
                   ),
-                  Card(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Text("Drunkard Reviews"),
-                            Text(
-                                "Average rating : ${averageDrunkardRating.toString()}/5.0"),
-                          ],
-                        ),
-                        if (firstDrunkard != null)
-                          FutureBuilder<Map<String, dynamic>?>(
-                            future: firstDrunkard.getAuthor(db),
-                            builder: (context, authorSnapshot) {
-                              if (authorSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (authorSnapshot.hasError) {
-                                return Text('Error: ${authorSnapshot.error}');
-                              } else {
-                                final author = authorSnapshot.data;
-                                return Text(
-                                    '\n${author?["name"] ?? "Unknown"} \n Rating: ${firstDrunkard.rating}/5.0 \n\n ${firstDrunkard.text}');
-                              }
-                            },
-                          ),
-                      ],
-                    ),
-                  )
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ProfileRatingcard(
+                          review: firstDriver,
+                          averageRating: averageDriverRating,
+                          reviewType: ReviewType.driver)),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ProfileRatingcard(
+                          review: firstDrunkard,
+                          averageRating: averageDrunkardRating,
+                          reviewType: ReviewType.drunkard)),
                 ],
               ),
             );

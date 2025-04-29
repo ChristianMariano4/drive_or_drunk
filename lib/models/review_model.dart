@@ -49,7 +49,7 @@ class Review {
   factory Review.fromMap(Map<String, dynamic> data, String documentId) {
     return Review(
         id: documentId,
-        author: data['author'],
+        author: data['author'] ,
         type: data['type'],
         text: data['text'],
         comments: List<Comment>.from((data['comments'] as List<dynamic>? ?? [])
