@@ -7,16 +7,29 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final user_model.User owner;
 
   ProfilePage({super.key, required this.owner});
 
   @override
+  ProfilePageState createState() => ProfilePageState();
+}
+
+class ProfilePageState extends State<ProfilePage> {
+  bool _isFavorite = false;
+
+  void _toggleFavorite() {
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     //final ImageProvider image =
-    //NetworkImage(owner.profilePicture ?? 'https://via.placeholder.com/150');
+    //NetworkImage(widget.owner.profilePicture ?? 'https://via.placeholder.com/150');
 
     return Scaffold(
       appBar: AppBar(
@@ -41,10 +54,10 @@ class ProfilePage extends StatelessWidget {
       ),
       body: FutureBuilder<List<Object?>>(
         future: Future.wait([
-          owner.getFirstDriverReview(db),
-          owner.getFirstDrunkardReview(db),
-          owner.calculateDriverRatingAverage(db),
-          owner.calculateDrunkardRatingAverage(db)
+          widget.owner.getFirstDriverReview(widget.db),
+          widget.owner.getFirstDrunkardReview(widget.db),
+          widget.owner.calculateDriverRatingAverage(widget.db),
+          widget.owner.calculateDrunkardRatingAverage(widget.db)
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -92,8 +105,8 @@ class ProfilePage extends StatelessWidget {
                       children: [
                         CircleAvatar(
                             radius: 60,
-                            backgroundImage: owner.profilePicture == null
-                                ? NetworkImage(owner.profilePicture!)
+                            backgroundImage: widget.owner.profilePicture == null
+                                ? NetworkImage(widget.owner.profilePicture!)
                                 : const AssetImage('assets/logos/logo_test.png')
                                     as ImageProvider),
                       ],
@@ -110,16 +123,16 @@ class ProfilePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                      owner.name.length <= 20
-                                          ? owner.name.toUpperCase()
-                                          : "${owner.name.substring(0, 18).toUpperCase()}...",
+                                      widget.owner.name.length <= 20
+                                          ? widget.owner.name.toUpperCase()
+                                          : "${widget.owner.name.substring(0, 18).toUpperCase()}...",
                                       softWrap: false,
                                       overflow: TextOverflow.fade,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelLarge
                                           ?.copyWith(fontSize: 26)),
-                                  Text(owner.age.toString(),
+                                  Text(widget.owner.age.toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelLarge
@@ -129,21 +142,25 @@ class ProfilePage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(
                                 bottom: 40,
-                                right: owner.name.length >= 12
+                                right: widget.owner.name.length >= 12
                                     ? 0
                                     : MediaQuery.of(context).size.width * 0.15),
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: IconButton(
-                                  icon: const Icon(Icons.star_border),
+                                  icon: Icon(_isFavorite
+                                      ? Icons.star
+                                      : Icons.star_border),
+                                  color:
+                                      _isFavorite ? Colors.amber : Colors.grey,
                                   iconSize: 40,
-                                  onPressed: () => {}),
+                                  onPressed: _toggleFavorite),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(
                                 top: 40,
-                                right: owner.name.length >= 12
+                                right: widget.owner.name.length >= 12
                                     ? 0
                                     : MediaQuery.of(context).size.width * 0.15),
                             child: Align(
@@ -156,7 +173,7 @@ class ProfilePage extends StatelessWidget {
                           )
                         ],
                       ),
-                      // Text(owner.age.toString(),
+                      // Text(widget.owner.age.toString(),
                       //     style: Theme.of(context)
                       //         .textTheme
                       //         .labelLarge
