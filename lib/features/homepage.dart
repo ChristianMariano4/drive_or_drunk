@@ -1,16 +1,18 @@
-import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
-import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
-import 'package:drive_or_drunk_app/core/constants/image_strings.dart';
-import 'package:drive_or_drunk_app/core/theme/curved_clipper.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
-import 'package:drive_or_drunk_app/widgets/home_page/custom_event_slider.dart';
-import 'package:drive_or_drunk_app/widgets/search_form.dart';
+import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/widgets/home_page/header_image.dart';
+import 'package:drive_or_drunk_app/widgets/home_page/tab_search_section.dart';
+import 'package:drive_or_drunk_app/widgets/home_page/trending_section.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +22,7 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
+            onPressed: _signOut,
           ),
           IconButton(
             icon: Icon(
@@ -35,62 +35,21 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ClipPath(
-                clipper: CurvedClipper(),
-                child: const Stack(children: [
-                  Image(
-                    image: AssetImage(Images.homepageImg),
-                  ),
-                  Positioned(
-                      top: 10,
-                      right: 20,
-                      child: Text(
-                        'Driver or Drunker?',
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold),
-                      )),
-                ]),
+              HeaderImage(),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppSizes.md,
+                  right: AppSizes.md,
+                ),
+                child: TabSearchSection(),
               ),
-              const Padding(
-                  padding: EdgeInsets.only(
-                    left: AppSizes.md,
-                    right: AppSizes.md,
-                    top: AppSizes.md,
-                  ),
-                  child: Column(children: [
-                    SearchForm(),
-                    SizedBox(
-                      height: AppSizes.defaultSpace,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Trending now",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppSizes.fontSizeMd)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: AppSizes.sm),
-                      child: Divider(
-                        height: AppSizes.dividerHeight,
-                      ),
-                    ),
-                  ])),
-              CustomEventSlider(
-                itemsUrl: const [
-                  Images.event1Img,
-                  Images.event2Img,
-                  Images.event3Img,
-                ],
-              )
+              TrendingSection()
             ],
           ),
         ),
