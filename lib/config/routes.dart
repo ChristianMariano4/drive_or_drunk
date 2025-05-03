@@ -3,6 +3,7 @@ import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profilepage.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:drive_or_drunk_app/navigation_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

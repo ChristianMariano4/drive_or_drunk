@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseFirestore;
 import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
 import 'package:drive_or_drunk_app/models/review_model.dart';
-import 'package:flutter/foundation.dart';
 
 class User {
   final String? id;
@@ -16,6 +15,7 @@ class User {
   final List<DocumentReference> favoriteEvents;
   final List<DocumentReference> reviews;
   // TODO: add a conversations field to the User model
+  // TODO: add a list of favorite users field to the User model
 
   User({
     this.id,
@@ -31,7 +31,6 @@ class User {
   });
 
   factory User.fromMap(Map<String, dynamic> data, String documentId) {
-    debugPrint("User data: ${data['age']}}");
     return User(
       id: documentId,
       name: data['name'] ?? '',
@@ -80,7 +79,6 @@ class User {
     if (count > 0) {
       averageRating = totalRating / count;
     }
-    debugPrint("Driver average rating: $averageRating");
     return averageRating;
   }
 
@@ -95,7 +93,6 @@ class User {
         final data = reviewDoc.data() as Map<String, dynamic>;
         if (data['type'] == 'drunkard' && data['rating'] != null) {
           totalRating += data['rating'];
-          debugPrint("Drunkard rating: ${data['rating']}");
           count++;
         }
       }
@@ -104,7 +101,6 @@ class User {
     if (count > 0) {
       averageRating = totalRating / count;
     }
-    debugPrint("Drunkard average rating: $averageRating");
     return averageRating;
   }
 
@@ -161,8 +157,9 @@ Stream<List<User>> getUsers(FirebaseFirestore db) {
       snapshot.docs.map((doc) => User.fromMap(doc.data(), doc.id)).toList());
 }
 
-void updateUser(String id, Map<String, dynamic> data, FirebaseFirestore db) {
-  db.collection(Collections.users).doc(id).update(data);
+Future<void> updateUser(
+    String id, Map<String, dynamic> data, FirebaseFirestore db) async {
+  await db.collection(Collections.users).doc(id).update(data);
 }
 
 Future<void> deleteUser(String id, FirebaseFirestore db) async {
@@ -172,5 +169,5 @@ Future<void> deleteUser(String id, FirebaseFirestore db) async {
 Future<void> addReview(
     DocumentReference review, User user, FirebaseFirestore db) async {
   user.reviews.add(review);
-  updateUser(user.id!, user.toMap(), db);
+  await updateUser(user.id!, user.toMap(), db);
 }
