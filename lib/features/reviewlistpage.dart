@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
-import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
