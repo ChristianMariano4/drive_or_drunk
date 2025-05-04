@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:drive_or_drunk_app/widgets/home_page/date_picker.dart';
@@ -68,8 +70,17 @@ class EventSearchForm extends StatelessWidget {
 
           // Search Button
           CustomFilledButton(
-            onPressed: () {
-              // TODO: trigger search
+            onPressed: () async {
+              // Create a example user on the database
+              final db = FirebaseFirestore.instance;
+              final owner =
+                  await user_model.getUser("l36ByBI030TQ58XXYmpJ", db);
+              debugPrint("Owner : ${owner?.toMap().toString()}");
+              Navigator.pushNamed(
+                context,
+                '/profile',
+                arguments: owner,
+              );
             },
             labelText: "Search",
           ),
