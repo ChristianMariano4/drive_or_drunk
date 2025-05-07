@@ -64,75 +64,6 @@ class User {
       'reviews': reviews,
     };
   }
-
-  Future<double> calculateDriverRatingAverage(FirebaseFirestore db) async {
-    double totalRating = 0;
-    double count = 0;
-    double averageRating = 0;
-
-    for (final reviewRef in reviews) {
-      final reviewDoc = await reviewRef.get();
-      if (reviewDoc.exists) {
-        final data = reviewDoc.data() as Map<String, dynamic>;
-        if (data['type'] == 'driver' && data['rating'] != null) {
-          totalRating += data['rating'];
-          count++;
-        }
-      }
-    }
-    if (count > 0) {
-      averageRating = totalRating / count;
-    }
-    return averageRating;
-  }
-
-  Future<double> calculateDrunkardRatingAverage(FirebaseFirestore db) async {
-    double totalRating = 0;
-    int count = 0;
-    double averageRating = 0;
-
-    for (final reviewRef in reviews) {
-      final reviewDoc = await reviewRef.get();
-      if (reviewDoc.exists) {
-        final data = reviewDoc.data() as Map<String, dynamic>;
-        if (data['type'] == 'drunkard' && data['rating'] != null) {
-          totalRating += data['rating'];
-          count++;
-        }
-      }
-    }
-
-    if (count > 0) {
-      averageRating = totalRating / count;
-    }
-    return averageRating;
-  }
-
-  Future<Review?> getFirstDriverReview(FirebaseFirestore db) async {
-    for (final reviewRef in reviews) {
-      final reviewDoc = await reviewRef.get();
-      if (reviewDoc.exists) {
-        final data = reviewDoc.data() as Map<String, dynamic>;
-        if (data['type'] == 'driver') {
-          return Review.fromMap(data, reviewDoc.id);
-        }
-      }
-    }
-    return null;
-  }
-
-  Future<Review?> getFirstDrunkardReview(FirebaseFirestore db) async {
-    for (final reviewRef in reviews) {
-      final reviewDoc = await reviewRef.get();
-      if (reviewDoc.exists) {
-        final data = reviewDoc.data() as Map<String, dynamic>;
-        if (data['type'] == 'drunkard') {
-          return Review.fromMap(data, reviewDoc.id);
-        }
-      }
-    }
-    return null;
-  }
 }
 
 Future<DocumentReference?> getUserReference(
@@ -188,30 +119,39 @@ Future<void> removeFavoriteUser(
   await updateUser(currentUser.id!, currentUser.toMap(), db);
 }
 
-Future<List<Review>> getDriverReviews(User user, FirebaseFirestore db) async {
-  final List<Review> driverReviews = [];
+Future<List<Review>> getReviewsByType(
+    User user, FirebaseFirestore db, String reviewType) async {
+  final List<Review> reviewsByType = [];
   for (final reviewRef in user.reviews) {
     final reviewDoc = await reviewRef.get();
     if (reviewDoc.exists) {
       final data = reviewDoc.data() as Map<String, dynamic>;
-      if (data['type'] == 'driver') {
-        driverReviews.add(Review.fromMap(data, reviewDoc.id));
+      if (data['type'] == reviewType) {
+        reviewsByType.add(Review.fromMap(data, reviewDoc.id));
       }
     }
   }
-  return driverReviews;
+  return reviewsByType;
 }
 
-Future<List<Review>> getDrunkardReviews(User user, FirebaseFirestore db) async {
-  final List<Review> drunkardReviews = [];
+Future<double> calculateRatingAverage(
+    User user, FirebaseFirestore db, String reviewType) async {
+  double totalRating = 0;
+  double count = 0;
+  double averageRating = 0;
+
   for (final reviewRef in user.reviews) {
     final reviewDoc = await reviewRef.get();
     if (reviewDoc.exists) {
       final data = reviewDoc.data() as Map<String, dynamic>;
-      if (data['type'] == 'drunkard') {
-        drunkardReviews.add(Review.fromMap(data, reviewDoc.id));
+      if (data['type'] == reviewType && data['rating'] != null) {
+        totalRating += data['rating'];
+        count++;
       }
     }
   }
-  return drunkardReviews;
+  if (count > 0) {
+    averageRating = totalRating / count;
+  }
+  return averageRating;
 }

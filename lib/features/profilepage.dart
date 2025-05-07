@@ -1,23 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:drive_or_drunk_app/services/firestore_service.dart';
+import 'package:drive_or_drunk_app/utils/image_utils.dart';
 import 'package:drive_or_drunk_app/widgets/profile_ratingcard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  final FirebaseFirestore db = FirebaseFirestore.instance;
   final user_model.User owner;
 
-  ProfilePage({super.key, required this.owner});
+  const ProfilePage({super.key, required this.owner});
 
   @override
   ProfilePageState createState() => ProfilePageState();
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  final FirestoreService db = FirestoreService();
   user_model.User? currentUser;
   DocumentReference? ownerRef;
   late final ValueNotifier<bool> isFavorite = ValueNotifier(false);
@@ -29,14 +32,8 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> loadState() async {
-    final user = await user_model.getUser(
-      FirebaseAuth.instance.currentUser!.uid,
-      widget.db,
-    );
-    final ownerRef = await user_model.getUserReference(
-      widget.owner.id!,
-      widget.db,
-    );
+    final user = await db.getUser(FirebaseAuth.instance.currentUser!.uid);
+    final ownerRef = await db.getUserReference(widget.owner.id!);
     setState(() {
       currentUser = user;
       this.ownerRef = ownerRef;
@@ -46,19 +43,16 @@ class ProfilePageState extends State<ProfilePage> {
 
   void _toggleFavorite() async {
     if (isFavorite.value) {
-      user_model.removeFavoriteUser(ownerRef!, currentUser!, widget.db);
+      db.removeFavoriteUser(ownerRef!, currentUser!);
     } else {
       // Add to favorites
-      user_model.addFavoriteUser(ownerRef!, currentUser!, widget.db);
+      db.addFavoriteUser(ownerRef!, currentUser!);
     }
     isFavorite.value = currentUser!.favoriteUsers.contains(ownerRef);
   }
 
   @override
   Widget build(BuildContext context) {
-    //final ImageProvider image =
-    //NetworkImage(widget.owner.profilePicture ?? 'https://via.placeholder.com/150');
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
@@ -86,9 +80,9 @@ class ProfilePageState extends State<ProfilePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 80),
-                child: FilledButton.tonal(
+                child: FilledButton(
                   onPressed: () {
-                    // Add navigation functionality
+                    //TODO Add navigation functionality
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -110,10 +104,8 @@ class ProfilePageState extends State<ProfilePage> {
                   children: [
                     CircleAvatar(
                         radius: 60,
-                        backgroundImage: widget.owner.profilePicture == null
-                            ? NetworkImage(widget.owner.profilePicture!)
-                            : const AssetImage('assets/logos/logo_test.png')
-                                as ImageProvider),
+                        backgroundImage: imageProviderFromBase64(
+                            widget.owner.profilePicture ?? '')),
                   ],
                 ),
               ),
@@ -136,12 +128,16 @@ class ProfilePageState extends State<ProfilePage> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge
-                                      ?.copyWith(fontSize: 26)),
+                                      ?.copyWith(
+                                          fontSize: 26,
+                                          color: AppColors.black)),
                               Text(widget.owner.age.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge
-                                      ?.copyWith(fontSize: 26))
+                                      ?.copyWith(
+                                          fontSize: 26,
+                                          color: AppColors.black)),
                             ]),
                       ),
                       Padding(
@@ -159,7 +155,8 @@ class ProfilePageState extends State<ProfilePage> {
                                 icon: Icon(
                                   value ? Icons.star : Icons.star_border,
                                 ),
-                                color: value ? Colors.amber : Colors.grey,
+                                color:
+                                    value ? AppColors.yellow : AppColors.yellow,
                                 iconSize: 40,
                                 onPressed: _toggleFavorite,
                               );
@@ -178,16 +175,12 @@ class ProfilePageState extends State<ProfilePage> {
                           child: IconButton(
                               icon: const Icon(Icons.chat_rounded),
                               iconSize: 36,
+                              color: AppColors.primaryColor,
                               onPressed: () => {}),
                         ),
                       )
                     ],
                   ),
-                  // Text(widget.owner.age.toString(),
-                  //     style: Theme.of(context)
-                  //         .textTheme
-                  //         .labelLarge
-                  //         ?.copyWith(fontSize: 26)),
                 ],
               ),
               Padding(

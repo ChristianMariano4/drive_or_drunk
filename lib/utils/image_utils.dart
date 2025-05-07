@@ -3,6 +3,7 @@ import 'dart:io' show File;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/material.dart' show Image;
+import 'package:flutter/widgets.dart';
 
 Image imageFromBase64(String base64String) {
   try {
@@ -10,7 +11,17 @@ Image imageFromBase64(String base64String) {
     final Uint8List bytes = base64Decode(base64Data);
     return Image.memory(bytes);
   } catch (e) {
-    return Image.asset('assets/lgoos/logo_android12.png');
+    return Image.asset('assets/logos/logo_android12.png');
+  }
+}
+
+ImageProvider imageProviderFromBase64(String base64String) {
+  try {
+    final base64Data = base64String.split(',').last;
+    final Uint8List bytes = base64Decode(base64Data);
+    return MemoryImage(bytes);
+  } catch (e) {
+    return const AssetImage('assets/logos/logo_android12.png');
   }
 }
 

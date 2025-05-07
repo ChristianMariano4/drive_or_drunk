@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseException, FirebaseFirestore, Timestamp;
 import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
+import 'package:drive_or_drunk_app/models/user_model.dart';
 
 class Comment {
   final DocumentReference author;
@@ -49,7 +50,7 @@ class Review {
   factory Review.fromMap(Map<String, dynamic> data, String documentId) {
     return Review(
         id: documentId,
-        author: data['author'] ,
+        author: data['author'],
         type: data['type'],
         text: data['text'],
         comments: List<Comment>.from((data['comments'] as List<dynamic>? ?? [])
@@ -65,11 +66,6 @@ class Review {
       'type': type,
       'rating': rating,
     };
-  }
-
-  Future<Map<String, dynamic>> getAuthor(FirebaseFirestore db) async {
-    final authorDoc = await author.get();
-    return authorDoc.data() as Map<String, dynamic>;
   }
 }
 
@@ -112,4 +108,10 @@ Future<void> addComment(
     review.comments.add(comment);
     await updateReview(reviewId, review.toMap(), db);
   }
+}
+
+Future<User> getAuthor(Review review, FirebaseFirestore db) async {
+  final authorDoc = await review.author.get();
+  final data = authorDoc.data() as Map<String, dynamic>;
+  return User.fromMap(data, authorDoc.id);
 }

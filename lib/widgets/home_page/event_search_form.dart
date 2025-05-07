@@ -70,17 +70,8 @@ class EventSearchForm extends StatelessWidget {
 
           // Search Button
           CustomFilledButton(
-            onPressed: () async {
-              // Create a example user on the database
-              final db = FirebaseFirestore.instance;
-              final owner =
-                  await user_model.getUser("l36ByBI030TQ58XXYmpJ", db);
-              debugPrint("Owner : ${owner?.toMap().toString()}");
-              Navigator.pushNamed(
-                context,
-                '/profile',
-                arguments: owner,
-              );
+            onPressed: () {
+              // Implement search functionality
             },
             labelText: "Search",
           ),
