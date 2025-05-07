@@ -58,7 +58,10 @@ class ReviewsPreview extends StatelessWidget {
                   children: [
                     Expanded(
                         child: Text("${reviews![0].text}\n",
-                            style: Theme.of(context).textTheme.labelLarge,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: AppColors.black),
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis)),
                   ],

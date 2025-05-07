@@ -62,7 +62,10 @@ class ReviewsListBody extends StatelessWidget {
                         Expanded(
                             child: Text(
                           "${item.text}\n",
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(color: AppColors.black),
                         )),
                       ],
                     ),
