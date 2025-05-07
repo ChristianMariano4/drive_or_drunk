@@ -1,21 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show DocumentReference, FirebaseException, FirebaseFirestore, GeoPoint;
-import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
+    show
+        DocumentReference,
+        FirebaseException,
+        FirebaseFirestore,
+        GeoPoint,
+        Timestamp;
+import 'package:drive_or_drunk_app/core/constants/constants.dart'
+    show Collections;
 import 'package:drive_or_drunk_app/models/user_model.dart' show User;
 
 class Event {
   final String? id;
   final String name;
+  final String? description;
+  final String? image;
+  final DateTime date;
   final List<DocumentReference> drivers;
   final List<DocumentReference> drunkards;
   final GeoPoint? location;
+  final String place;
 
   Event(
       {this.id,
       required this.name,
       this.drivers = const [],
       this.drunkards = const [],
-      this.location});
+      this.location,
+      this.description,
+      this.image,
+      required this.date,
+      required this.place});
 
 // THIS PART IS PROBABLY NOT NEEDED BUT JUST IN CASE I LEFT IT IN
   // factory Event.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -46,6 +60,10 @@ class Event {
       drivers: List<DocumentReference>.from(data['drivers'] ?? []),
       drunkards: List<DocumentReference>.from(data['drunkards'] ?? []),
       location: data['location'],
+      description: data['description'],
+      image: data['image'],
+      date: (data['date'] as Timestamp).toDate(),
+      place: data['place'] ?? '',
     );
   }
 
@@ -55,6 +73,10 @@ class Event {
       'drivers': drivers,
       'drunkards': drunkards,
       'location': location,
+      'description': description,
+      'image': image,
+      'date': Timestamp.fromDate(date),
+      'place': place,
     };
   }
 }

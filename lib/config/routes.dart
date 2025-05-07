@@ -1,5 +1,7 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
+import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
+import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/navigation_menu.dart' show NavigationMenu;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +16,8 @@ class AppRoutes {
   static const String login = '/login';
   static const register = '/register';
   static const navMenu = '/navigation';
+  static const eventsList = '/eventsList';
+  static const createNewEvent = '/createNewEvent';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Custom route wrapper that checks authentication
@@ -59,6 +63,12 @@ class AppRoutes {
       case navMenu:
         return authenticatedRoute(
             builder: (_) => const NavigationMenu(), routeName: navMenu);
+      case eventsList:
+        return authenticatedRoute(
+            builder: (_) => const EventsListPage(), routeName: eventsList);
+      case createNewEvent:
+        return authenticatedRoute(
+            builder: (_) => const NewEventPage(), routeName: createNewEvent);
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

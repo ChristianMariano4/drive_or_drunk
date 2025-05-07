@@ -2,15 +2,35 @@ import 'dart:convert' show base64Decode, base64Encode;
 import 'dart:io' show File;
 import 'dart:typed_data' show Uint8List;
 
-import 'package:flutter/material.dart' show Image;
+import 'package:flutter/material.dart'
+    show Alignment, Animation, BoxFit, Image, ImageRepeat;
 
-Image imageFromBase64(String base64String) {
+Image imageFromBase64(String? base64String,
+    {String? defaultImagePath,
+    BoxFit? fit,
+    double? width,
+    double? height,
+    Animation<double>? opacity,
+    Alignment alignment = Alignment.center,
+    ImageRepeat repeat = ImageRepeat.noRepeat}) {
   try {
-    final base64Data = base64String.split(',').last;
+    final base64Data = base64String!.split(',').last;
     final Uint8List bytes = base64Decode(base64Data);
-    return Image.memory(bytes);
+    return Image.memory(bytes,
+        fit: fit,
+        width: width,
+        height: height,
+        opacity: opacity,
+        alignment: alignment,
+        repeat: repeat);
   } catch (e) {
-    return Image.asset('assets/lgoos/logo_android12.png');
+    return Image.asset(defaultImagePath ?? 'assets/logos/logo_android12.png',
+        fit: fit,
+        width: width,
+        height: height,
+        opacity: opacity,
+        alignment: alignment,
+        repeat: repeat);
   }
 }
 
