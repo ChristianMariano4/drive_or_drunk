@@ -1,6 +1,8 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DatePicker extends StatefulWidget {
   final IconData icon;
@@ -42,23 +44,21 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final isLight = context.watch<ThemeProvider>().themeMode == ThemeMode.light;
+    final fillColor = Theme.of(context).inputDecorationTheme.fillColor;
+
     return Expanded(
-      child: GestureDetector(
+      child: TextField(
+        readOnly: true,
         onTap: _selectDate,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.horizontalPadding,
-              vertical: AppSizes.verticalPadding),
-          decoration: BoxDecoration(
-            color: AppColors.grey,
+        decoration: InputDecoration(
+          hintText: "Pick a Date",
+          prefixIcon: const Icon(Icons.calendar_today),
+          filled: true,
+          fillColor: isLight ? AppColors.grey : fillColor,
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-          ),
-          child: Row(
-            children: [
-              Icon(widget.icon),
-              const SizedBox(width: AppSizes.sm),
-              Text(widget.labelText),
-            ],
+            borderSide: BorderSide.none,
           ),
         ),
       ),

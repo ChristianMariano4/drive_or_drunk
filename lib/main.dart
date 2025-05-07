@@ -61,7 +61,7 @@ class MainApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       themeMode:
           themeProvider.themeMode, // Dynamically respond to theme changes
-      initialRoute: AppRoutes.home,
+      initialRoute: AppRoutes.navMenu,
       navigatorKey: navigatorKey,
       onGenerateRoute: AppRoutes.generateRoute,
       scaffoldMessengerKey: scaffoldMessengerKey,

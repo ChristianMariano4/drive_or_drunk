@@ -26,6 +26,9 @@ class AppSizes {
   // AppBar height
   static const double appBarHeight = 56.0;
 
+  // Field in form height
+  static const double formFieldHeight = 56.0;
+
   // Default spacing between sections
   static const double defaultSpace = 18.0;
   static const double spaceBtwItems = 12.0;

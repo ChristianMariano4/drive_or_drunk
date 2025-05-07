@@ -19,8 +19,7 @@ class TabSearchSection extends StatelessWidget {
           ),
           SizedBox(height: AppSizes.sm),
           SizedBox(
-            height:
-                AppSizes.searchFormHeight, // or flexible depending on layout
+            height: AppSizes.searchFormHeight,
             child: TabBarView(
               children: [
                 EventSearchForm(),
