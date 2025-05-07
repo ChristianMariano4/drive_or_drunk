@@ -19,8 +19,8 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   user_model.User? currentUser;
-  bool _isFavorite = false;
   DocumentReference? ownerRef;
+  late final ValueNotifier<bool> isFavorite = ValueNotifier(false);
 
   @override
   void initState() {
@@ -40,20 +40,18 @@ class ProfilePageState extends State<ProfilePage> {
     setState(() {
       currentUser = user;
       this.ownerRef = ownerRef;
-      _isFavorite = currentUser!.favoriteUsers.contains(ownerRef);
     });
+    isFavorite.value = currentUser!.favoriteUsers.contains(ownerRef);
   }
 
-  void _toggleFavorite() {
-    setState(() {
-      if (_isFavorite) {
-        user_model.removeFavoriteUser(ownerRef!, currentUser!, widget.db);
-      } else {
-        // Add to favorites
-        user_model.addFavoriteUser(ownerRef!, currentUser!, widget.db);
-      }
-      _isFavorite = currentUser!.favoriteUsers.contains(ownerRef);
-    });
+  void _toggleFavorite() async {
+    if (isFavorite.value) {
+      user_model.removeFavoriteUser(ownerRef!, currentUser!, widget.db);
+    } else {
+      // Add to favorites
+      user_model.addFavoriteUser(ownerRef!, currentUser!, widget.db);
+    }
+    isFavorite.value = currentUser!.favoriteUsers.contains(ownerRef);
   }
 
   @override
@@ -154,12 +152,19 @@ class ProfilePageState extends State<ProfilePage> {
                                 : MediaQuery.of(context).size.width * 0.15),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: IconButton(
-                              icon: Icon(
-                                  _isFavorite ? Icons.star : Icons.star_border),
-                              color: _isFavorite ? Colors.amber : Colors.grey,
-                              iconSize: 40,
-                              onPressed: _toggleFavorite),
+                          child: ValueListenableBuilder<bool>(
+                            valueListenable: isFavorite,
+                            builder: (context, value, _) {
+                              return IconButton(
+                                icon: Icon(
+                                  value ? Icons.star : Icons.star_border,
+                                ),
+                                color: value ? Colors.amber : Colors.grey,
+                                iconSize: 40,
+                                onPressed: _toggleFavorite,
+                              );
+                            },
+                          ),
                         ),
                       ),
                       Padding(

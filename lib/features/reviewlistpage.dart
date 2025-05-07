@@ -101,10 +101,12 @@ class Reviewlistpage extends StatelessWidget {
                             ],
                           ),
                         ])),
-                    const Divider(
-                      color: Color(0xFF095D9E),
-                      thickness: 5,
-                    )
+                    const Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Divider(
+                          color: Color(0xFF095D9E),
+                          thickness: 2,
+                        ))
                   ]);
                 }
               },
