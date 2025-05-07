@@ -64,6 +64,7 @@ class ProfileRatingcard extends StatelessWidget {
                 const Divider(
                   height: 10,
                   thickness: 3,
+                  color: AppColors.dividerColor,
                 ),
                 if (reviews != null && reviews.isNotEmpty) ...[
                   ReviewsPreview(reviews: reviews, db: db),
