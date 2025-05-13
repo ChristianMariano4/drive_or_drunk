@@ -23,7 +23,7 @@ class HeaderImage extends StatelessWidget {
             top: 10,
             right: 20,
             child: Text(
-              'Driver or Drunker?',
+              'Drive or Drunk?',
               style: TextStyle(
                   fontSize: AppSizes.fontSizeXl,
                   color: AppColors.white,

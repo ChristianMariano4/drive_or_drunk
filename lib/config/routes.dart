@@ -1,5 +1,7 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
+import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
+import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profilepage.dart';
 import 'package:drive_or_drunk_app/features/reviewlistpage.dart';
@@ -20,6 +22,9 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String navMenu = '/navigation';
   static const String reviewlist = '/reviewlist';
+  static const String eventsList = '/eventsList';
+  static const String createNewEvent = '/createNewEvent';
+
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Custom route wrapper that checks authentication
@@ -77,6 +82,12 @@ class AppRoutes {
             builder: (_) =>
                 Reviewlistpage(reviews: reviews, reviewType: reviewType),
             routeName: reviewlist);
+      case eventsList:
+        return authenticatedRoute(
+            builder: (_) => const EventsListPage(), routeName: eventsList);
+      case createNewEvent:
+        return authenticatedRoute(
+            builder: (_) => const NewEventPage(), routeName: createNewEvent);
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
