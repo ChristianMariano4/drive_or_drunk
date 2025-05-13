@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseException, FirebaseFirestore, Timestamp;
-import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
+import 'package:drive_or_drunk_app/core/constants/constants.dart'
+    show Collections;
 import 'package:drive_or_drunk_app/models/user_model.dart';
 
 class Comment {

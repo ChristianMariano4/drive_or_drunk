@@ -136,9 +136,9 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       const SizedBox(height: 24),
                       CustomElevatedButton(
-                          onPressed: _isLoading ? null : _login,
-                          child: const Text('Login',
-                              style: TextStyle(fontSize: 25))),
+                        onPressed: _isLoading ? null : _login,
+                        labelText: 'Login',
+                      ),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

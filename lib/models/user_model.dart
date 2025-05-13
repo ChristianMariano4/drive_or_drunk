@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseFirestore;
 
-import 'package:drive_or_drunk_app/config/constants.dart' show Collections;
+import 'package:drive_or_drunk_app/core/constants/constants.dart'
+    show Collections;
 import 'package:drive_or_drunk_app/models/review_model.dart';
-
 
 class User {
   final String? id;
