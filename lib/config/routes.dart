@@ -3,7 +3,11 @@ import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
-import 'package:drive_or_drunk_app/navigation_menu.dart' show NavigationMenu;
+import 'package:drive_or_drunk_app/features/profilepage.dart';
+import 'package:drive_or_drunk_app/features/reviewlistpage.dart';
+import 'package:drive_or_drunk_app/models/review_model.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:drive_or_drunk_app/navigation_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +18,13 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
-  static const register = '/register';
-  static const navMenu = '/navigation';
-  static const eventsList = '/eventsList';
-  static const createNewEvent = '/createNewEvent';
+  static const String register = '/register';
+  static const String profile = '/profile';
+  static const String navMenu = '/navigation';
+  static const String reviewlist = '/reviewlist';
+  static const String eventsList = '/eventsList';
+  static const String createNewEvent = '/createNewEvent';
+
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Custom route wrapper that checks authentication
@@ -60,9 +67,21 @@ class AppRoutes {
       case register:
         return authenticatedRoute(
             builder: (_) => const RegisterPage(), routeName: register);
+      case profile:
+        final user = settings.arguments as user_model.User;
+        return authenticatedRoute(
+            builder: (_) => ProfilePage(owner: user), routeName: profile);
       case navMenu:
         return authenticatedRoute(
             builder: (_) => const NavigationMenu(), routeName: navMenu);
+      case reviewlist:
+        final args = settings.arguments as Map<String, dynamic>;
+        final reviews = args['reviewList'] as List<Review>;
+        final reviewType = args['reviewType'] as String;
+        return authenticatedRoute(
+            builder: (_) =>
+                Reviewlistpage(reviews: reviews, reviewType: reviewType),
+            routeName: reviewlist);
       case eventsList:
         return authenticatedRoute(
             builder: (_) => const EventsListPage(), routeName: eventsList);

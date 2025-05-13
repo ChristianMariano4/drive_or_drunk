@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +74,7 @@ class EventSearchForm extends StatelessWidget {
           // Search Button
           CustomFilledButton(
             onPressed: () {
-              // TODO: trigger search
+              // Implement search functionality
             },
             labelText: "Search",
           ),

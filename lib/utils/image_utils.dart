@@ -2,8 +2,7 @@ import 'dart:convert' show base64Decode, base64Encode;
 import 'dart:io' show File;
 import 'dart:typed_data' show Uint8List;
 
-import 'package:flutter/material.dart'
-    show Alignment, Animation, BoxFit, Image, ImageRepeat;
+import 'package:flutter/material.dart' show AssetImage, Image, ImageProvider, MemoryImage;
 
 Image imageFromBase64(String? base64String,
     {String? defaultImagePath,
@@ -31,6 +30,17 @@ Image imageFromBase64(String? base64String,
         opacity: opacity,
         alignment: alignment,
         repeat: repeat);
+  }
+}
+
+
+ImageProvider imageProviderFromBase64(String base64String) {
+  try {
+    final base64Data = base64String.split(',').last;
+    final Uint8List bytes = base64Decode(base64Data);
+    return  MemoryImage(bytes);
+  } catch (e) {
+    return const AssetImage('assets/logos/logo_android12.png');
   }
 }
 

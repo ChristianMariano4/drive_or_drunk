@@ -40,6 +40,28 @@ class FirestoreService {
     return user_model.deleteUser(id, _db);
   }
 
+  Future<void> addFavoriteUser(
+      DocumentReference userRef, User currentUser) async {
+    return user_model.addFavoriteUser(userRef, currentUser, _db);
+  }
+
+  Future<void> removeFavoriteUser(
+      DocumentReference userRef, User currentUser) async {
+    return user_model.removeFavoriteUser(userRef, currentUser, _db);
+  }
+
+  Future<void> addReviewToUser(DocumentReference reviewRef, User user) async {
+    return user_model.addReview(reviewRef, user, _db);
+  }
+
+  Future<List<Review>> getReviewsByType(User user, String reviewType) async {
+    return user_model.getReviewsByType(user, _db, reviewType);
+  }
+
+  Future<double> getAverageRating(User user, String reviewType) async {
+    return user_model.calculateRatingAverage(user, _db, reviewType);
+  }
+
 // ==================== EVENT METHODS ====================
   Future<void> addEvent(Event event) async {
     return event_model.addEvent(event, _db);
@@ -140,8 +162,8 @@ class FirestoreService {
 
 // ==================== REVIEW METHODS ====================
   Future<void> addReview(Review review, User user) async {
-     final reviewRef = await review_model.addReview(review, _db);
-     user_model.addReview(reviewRef, user, _db);
+    final reviewRef = await review_model.addReview(review, _db);
+    user_model.addReview(reviewRef, user, _db);
   }
 
   Future<Review?> getReview(String id) async {
@@ -163,5 +185,9 @@ class FirestoreService {
   Future<void> addCommentToReview(
       String reviewId, review_model.Comment comment) async {
     return review_model.addComment(reviewId, comment, _db);
+  }
+
+  Future<User> getAuthor(Review review) async {
+    return review_model.getAuthor(review, _db);
   }
 }
