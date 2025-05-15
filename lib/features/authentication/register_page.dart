@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage>
               ClipPath(
                 clipper: WavyClipper(),
                 child: Container(
-                  color: AppColors.blue,
+                  color: AppColors.primaryColor,
                   child: Container(
                       height: MediaQuery.of(context).size.height * 0.17,
                       alignment: Alignment.lerp(
@@ -78,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage>
                                 child: IconButton(
                                   onPressed: () => Navigator.pop(context),
                                   icon: const Icon(Icons.arrow_back,
-                                      color: AppColors.blue),
+                                      color: AppColors.primaryColor),
                                   iconSize: 25,
                                   tooltip: 'Back',
                                 ))),

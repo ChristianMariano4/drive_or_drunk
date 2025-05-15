@@ -1,4 +1,5 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
+import 'package:drive_or_drunk_app/features/authentication/password_recover_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const String eventsList = '/eventsList';
   static const String createNewEvent = '/createNewEvent';
 
+  static const recoverPassword = '/recoverPassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Custom route wrapper that checks authentication
@@ -88,6 +90,9 @@ class AppRoutes {
       case createNewEvent:
         return authenticatedRoute(
             builder: (_) => const NewEventPage(), routeName: createNewEvent);
+      case recoverPassword:
+        return authenticatedRoute(
+            builder: (_) => PasswordRecoverPage(), routeName: recoverPassword);
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

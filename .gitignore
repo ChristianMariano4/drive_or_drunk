@@ -64,3 +64,7 @@ firepit-log.txt
 
 # Ignore .lock files
 **/*.lock
+
+# Ignore generated files
+**/generated_plugin*
+**/GeneratedPlugin*
