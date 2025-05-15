@@ -10,5 +10,5 @@ String getLocalizedDate(DateTime date, {String locale = 'en'}) {
 }
 
 String getLocalizedDateInNumberFormat(DateTime date, {String locale = 'en'}) {
-  return DateFormat.yMd(locale).format(date); // 1/1/2023
+  return DateFormat('dd/MM/yyyy', locale).format(date); // 01/01/2023
 }

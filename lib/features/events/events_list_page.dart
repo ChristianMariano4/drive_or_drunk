@@ -70,12 +70,6 @@ class _EventsListPageState extends State<EventsListPage> {
               ),
             ],
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
         ),
         body: Stack(
           fit: StackFit.expand,

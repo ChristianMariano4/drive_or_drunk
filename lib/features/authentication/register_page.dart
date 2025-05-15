@@ -1,6 +1,6 @@
 import 'package:drive_or_drunk_app/config/routes.dart';
-import 'package:drive_or_drunk_app/core/constants/app_constants.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
+import 'package:drive_or_drunk_app/core/constants/app_constants.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
@@ -36,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage>
               displayName: _nameController.text.trim(),
             );
         navigatorKey.currentState?.popUntil((route) => route.isFirst);
-        navigatorKey.currentState?.pushNamed(AppRoutes.home);
+        navigatorKey.currentState?.pushNamed(AppRoutes.navMenu);
       } catch (e) {
         scaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(content: Text(e.toString())),
@@ -137,10 +137,8 @@ class _RegisterPageState extends State<RegisterPage>
                       ),
                       const SizedBox(height: 36),
                       CustomElevatedButton(
-                        onPressed: _isLoading ? null : _register,
-                        child: const Text('Sign up',
-                            style: TextStyle(fontSize: 25)),
-                      ),
+                          onPressed: _isLoading ? null : _register,
+                          labelText: 'Sign Up'),
                       const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

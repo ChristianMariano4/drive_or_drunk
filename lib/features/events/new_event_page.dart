@@ -1,8 +1,12 @@
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
-import 'package:drive_or_drunk_app/utils/time_utils.dart'
-    show getLocalizedDateInNumberFormat;
+import 'package:drive_or_drunk_app/models/event_model.dart';
+import 'package:drive_or_drunk_app/services/firestore_service.dart'
+    show FirestoreService;
+import 'package:drive_or_drunk_app/utils/image_utils.dart'
+    show base64StringFromImage;
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
-import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
+import 'package:drive_or_drunk_app/widgets/date_input_field.dart';
+import 'package:drive_or_drunk_app/widgets/image_input_field.dart';
 import 'package:drive_or_drunk_app/widgets/theme_change_button.dart';
 import 'package:flutter/material.dart';
 
@@ -13,40 +17,42 @@ class NewEventPage extends StatefulWidget {
   State<NewEventPage> createState() => _NewEventPageState();
 }
 
-//TODO:  Date input fixes: actions not centered, error message always shown.
-
 class _NewEventPageState extends State<NewEventPage> {
+  final FirestoreService _firestoreService = FirestoreService();
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-
-  void _pickDate() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (pickedDate == null) return;
-    final pickedDateFormatted = getLocalizedDateInNumberFormat(pickedDate);
-    if (pickedDateFormatted != _dateController.text) {
-      setState(() {
-        _dateController.text = getLocalizedDateInNumberFormat(pickedDate);
-      });
-    }
-  }
+  final TextEditingController _placeController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
 
   void _saveEvent() {
+    _formKey.currentState
+        ?.save(); // Save also calls validate unfortunately I couldn't find a way to avoid it
     if (_formKey.currentState!.validate()) {
       final String title = _titleController.text;
       final String description = _descriptionController.text;
       final String date = _dateController.text;
+      final String place = _placeController.text;
+      final String imageBase64 = _imageController.text;
 
       // Clear the form
       _titleController.clear();
       _descriptionController.clear();
       _dateController.clear();
+      _placeController.clear();
+      _imageController.clear();
+
+      _firestoreService.addEvent(
+        Event(
+          name: title,
+          description: description,
+          date: DateTime.parse(date.split('/').reversed.join('-')),
+          place: place,
+          image: imageBase64,
+        ),
+      );
 
       // Optionally navigate back or show a success message
       Navigator.of(context).pop();
@@ -70,7 +76,7 @@ class _NewEventPageState extends State<NewEventPage> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Event Title'),
+                decoration: const InputDecoration(labelText: 'Event Title*'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
@@ -78,67 +84,30 @@ class _NewEventPageState extends State<NewEventPage> {
                   return null;
                 },
               ),
-              CustomTextFormField(
+              TextFormField(
                 controller: _descriptionController,
-                labelText: 'Description',
+                decoration: const InputDecoration(
+                  labelText: 'Event Description',
+                ),
+                maxLines: 2,
               ),
-              Stack(
-                fit: StackFit.passthrough,
-                children: [
-                  TextFormField(
-                    controller: _dateController,
-                    onChanged: (value) {
-                      setState(() {
-                        _dateController.text = value;
-                      });
-                      debugPrint(_dateController.text);
-                    },
-                    decoration: const InputDecoration(
-                        labelText: 'Event Date', hintText: 'dd/mm/yyyy'),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a date';
-                      }
-                      final dateParts = value.split('/');
-                      if (dateParts.length != 3) {
-                        return 'Invalid date format';
-                      }
-                      final day = int.tryParse(dateParts[0]);
-                      final month = int.tryParse(dateParts[1]);
-                      final year = int.tryParse(dateParts[2]);
-                      if (day == null || month == null || year == null) {
-                        return 'Invalid date format';
-                      }
-                      final isValidDate = DateTime.tryParse(
-                          '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}');
-                      if (isValidDate == null) {
-                        return 'Invalid date';
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (_dateController.text != '')
-                        IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            setState(() {
-                              _dateController.clear();
-                            });
-                          },
-                        ),
-                      IconButton(
-                        icon: const Icon(Icons.calendar_today),
-                        color: Theme.of(context).primaryColor,
-                        onPressed: _pickDate,
-                      ),
-                    ],
-                  )
-                ],
+              DateInputField(
+                controller: _dateController,
+                required: true,
               ),
+              TextFormField(
+                controller: _placeController,
+                decoration: const InputDecoration(
+                  labelText: 'Event Place',
+                ),
+              ),
+              // TODO: add geolocation input
+              ImageInputField(
+                onImageSelected: (image) {
+                  _imageController.text = base64StringFromImage(image);
+                },
+              ),
+
               CustomElevatedButton(
                 onPressed: _saveEvent,
                 labelText: 'Save Event',

@@ -1,3 +1,5 @@
+import 'package:drive_or_drunk_app/features/events/events_list_page.dart'
+    show EventsListPage;
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   int _selectedIndex = 0;
   final _screens = [
     const HomePage(),
-    Container(color: Colors.purple),
+    const EventsListPage(),
     Container(color: Colors.yellow),
     Container(color: Colors.black)
   ];

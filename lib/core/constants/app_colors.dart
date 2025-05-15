@@ -8,5 +8,7 @@ class AppColors {
   static const Color blue = Color(0xFF007BFF);
   static const Color primaryColor = Color(0xFF095D9E);
   static const Color dividerColor = Color(0xFFD1D1D1);
-  static const Color black = Color(0xFF000000);
+  static const Color filledBackgroundColorLight =
+      Color.fromRGBO(231, 231, 231, 1);
+  static const Color filledBackgroundColorDark = Color.fromRGBO(40, 40, 40, 1);
 }

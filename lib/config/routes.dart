@@ -44,7 +44,7 @@ class AppRoutes {
 
               // If user is logged in and trying to access login, redirect to home
               if (currentUser != null && routeName == login) {
-                return const HomePage();
+                return const NavigationMenu();
               }
 
               // Otherwise, return the requested route
