@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseFirestore;
-
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
+import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
+import 'package:drive_or_drunk_app/services/user_service.dart';
 
 class User {
   final String? id;
@@ -113,12 +114,40 @@ Future<void> addFavoriteUser(
     DocumentReference user, User currentUser, FirebaseFirestore db) async {
   currentUser.favoriteUsers.add(user);
   await updateUser(currentUser.id!, currentUser.toMap(), db);
+  UserService().updateLocally(currentUser);
 }
 
 Future<void> removeFavoriteUser(
     DocumentReference user, User currentUser, FirebaseFirestore db) async {
   currentUser.favoriteUsers.remove(user);
   await updateUser(currentUser.id!, currentUser.toMap(), db);
+  UserService().updateLocally(currentUser);
+}
+
+Future<void> addFavoriteEvent(
+    Event event, String userId, FirebaseFirestore db) async {
+  final user = await getUser(userId, db);
+  final eventRef = await db
+      .collection(Collections.events)
+      .doc(event.id)
+      .get()
+      .then((snapshot) => snapshot.reference);
+  user!.favoriteEvents.add(eventRef);
+  await updateUser(user.id!, user.toMap(), db);
+  UserService().updateLocally(user);
+}
+
+Future<void> removeFavoriteEvent(
+    Event event, String userId, FirebaseFirestore db) async {
+  final user = await getUser(userId, db);
+  final eventRef = await db
+      .collection(Collections.events)
+      .doc(event.id)
+      .get()
+      .then((snapshot) => snapshot.reference);
+  user!.favoriteEvents.remove(eventRef);
+  await updateUser(user.id!, user.toMap(), db);
+  UserService().updateLocally(user);
 }
 
 Future<List<Review>> getReviewsByType(

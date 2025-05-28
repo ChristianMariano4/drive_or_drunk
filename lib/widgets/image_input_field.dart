@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/utils/image_utils.dart' show base64ToFile;
 import 'package:drive_or_drunk_app/utils/theme_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInputField extends StatefulWidget {
   final Function(File) onImageSelected;
+  final String? initialImage;
 
-  const ImageInputField({super.key, required this.onImageSelected});
+  const ImageInputField(
+      {super.key, required this.onImageSelected, this.initialImage});
 
   @override
   State<ImageInputField> createState() => _ImageInputFieldState();
@@ -30,6 +33,21 @@ class _ImageInputFieldState extends State<ImageInputField> {
         _selectedImage = File(pickedFile.path);
       });
       widget.onImageSelected(File(pickedFile.path));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialImage != null) {
+      base64ToFile(widget.initialImage!, 'initial_image.png').then((file) {
+        setState(() {
+          _selectedImage = file;
+        });
+        widget.onImageSelected(file);
+      }).catchError((error) {
+        debugPrint('Error converting base64 to file: $error');
+      });
     }
   }
 

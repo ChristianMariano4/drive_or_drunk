@@ -85,7 +85,7 @@ class _EventsListPageState extends State<EventsListPage> {
               right: AppSizes.lg,
               child: FloatingActionButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.createNewEvent);
+                  Navigator.of(context).pushNamed(AppRoutes.upsertEvent);
                 },
                 child: const Icon(Icons.add),
               ),

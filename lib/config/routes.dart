@@ -1,11 +1,13 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/password_recover_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
+import 'package:drive_or_drunk_app/features/events/event_detail_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profilepage.dart';
 import 'package:drive_or_drunk_app/features/reviewlistpage.dart';
+import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/navigation_menu.dart';
@@ -24,8 +26,8 @@ class AppRoutes {
   static const String navMenu = '/navigation';
   static const String reviewlist = '/reviewlist';
   static const String eventsList = '/eventsList';
-  static const String createNewEvent = '/createNewEvent';
-
+  static const String upsertEvent = '/upsertEvent';
+  static const String eventDetails = '/eventDetails';
   static const recoverPassword = '/recoverPassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -87,12 +89,21 @@ class AppRoutes {
       case eventsList:
         return authenticatedRoute(
             builder: (_) => const EventsListPage(), routeName: eventsList);
-      case createNewEvent:
+      case upsertEvent:
+        final event = settings.arguments as Event?;
         return authenticatedRoute(
-            builder: (_) => const NewEventPage(), routeName: createNewEvent);
+            builder: (_) => UpsertEventPage(event: event),
+            routeName: upsertEvent);
+      case eventDetails:
+        final event = settings.arguments as Event;
+        return authenticatedRoute(
+            builder: (_) => EventDetailPage(event: event),
+            routeName: eventDetails);
       case recoverPassword:
         return authenticatedRoute(
-            builder: (_) => PasswordRecoverPage(), routeName: recoverPassword);
+            builder: (_) => const PasswordRecoverPage(),
+            routeName: recoverPassword);
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

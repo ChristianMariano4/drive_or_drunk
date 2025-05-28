@@ -50,6 +50,14 @@ class FirestoreService {
     return user_model.removeFavoriteUser(userRef, currentUser, _db);
   }
 
+  Future<void> addFavoriteEvent(Event event, String userId) async {
+    return user_model.addFavoriteEvent(event, userId, _db);
+  }
+
+  Future<void> removeFavoriteEvent(Event event, String userId) async {
+    return user_model.removeFavoriteEvent(event, userId, _db);
+  }
+
   Future<void> addReviewToUser(DocumentReference reviewRef, User user) async {
     return user_model.addReview(reviewRef, user, _db);
   }
@@ -71,6 +79,10 @@ class FirestoreService {
     return event_model.getEvent(id, _db);
   }
 
+  Future<DocumentReference?> getEventReference(String id) async {
+    return event_model.getEventReference(id, _db);
+  }
+
   Stream<List<Event>> getEvents() {
     return event_model.getEvents(_db);
   }
@@ -84,22 +96,22 @@ class FirestoreService {
   }
 
   Future<void> addDriverToEvent(
-      String eventId, DocumentReference<User> driverRef) async {
+      String eventId, DocumentReference driverRef) async {
     return event_model.addDriver(eventId, driverRef, _db);
   }
 
   Future<void> addDrunkardToEvent(
-      String eventId, DocumentReference<User> drunkardRef) async {
+      String eventId, DocumentReference drunkardRef) async {
     return event_model.addDrunkard(eventId, drunkardRef, _db);
   }
 
   Future<void> removeDriverFromEvent(
-      String eventId, DocumentReference<User> driverRef) async {
+      String eventId, DocumentReference driverRef) async {
     return event_model.removeDriver(eventId, driverRef, _db);
   }
 
   Future<void> removeDrunkardFromEvent(
-      String eventId, DocumentReference<User> drunkardRef) async {
+      String eventId, DocumentReference drunkardRef) async {
     return event_model.removeDrunkard(eventId, drunkardRef, _db);
   }
 

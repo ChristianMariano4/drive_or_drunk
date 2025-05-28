@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show
         DocumentReference,
+        FieldValue,
         FirebaseException,
         FirebaseFirestore,
         GeoPoint,
         Timestamp;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
-import 'package:drive_or_drunk_app/models/user_model.dart' show User;
+import 'package:drive_or_drunk_app/services/user_service.dart';
 
 class Event {
   final String? id;
@@ -19,10 +20,12 @@ class Event {
   final List<DocumentReference> drunkards;
   final GeoPoint? location;
   final String place;
+  final String author;
 
   Event(
       {this.id,
       required this.name,
+      required this.author,
       this.drivers = const [],
       this.drunkards = const [],
       this.location,
@@ -57,6 +60,7 @@ class Event {
     return Event(
       id: documentId,
       name: data['name'] ?? '',
+      author: data['author'] ?? '',
       drivers: List<DocumentReference>.from(data['drivers'] ?? []),
       drunkards: List<DocumentReference>.from(data['drunkards'] ?? []),
       location: data['location'],
@@ -77,7 +81,33 @@ class Event {
       'image': image,
       'date': Timestamp.fromDate(date),
       'place': place,
+      'author': author,
     };
+  }
+
+  Event copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? image,
+    DateTime? date,
+    List<DocumentReference>? drivers,
+    List<DocumentReference>? drunkards,
+    GeoPoint? location,
+    String? place,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      date: date ?? this.date,
+      drivers: drivers ?? this.drivers,
+      drunkards: drunkards ?? this.drunkards,
+      location: location ?? this.location,
+      place: place ?? this.place,
+      author: author,
+    );
   }
 }
 
@@ -100,9 +130,15 @@ Future<Event?> getEvent(String id, FirebaseFirestore db) async {
   return null;
 }
 
+Future<DocumentReference?> getEventReference(
+    String id, FirebaseFirestore db) async {
+  return db.collection(Collections.events).doc(id);
+}
+
 Stream<List<Event>> getEvents(FirebaseFirestore db) {
   return db.collection(Collections.events).snapshots().map((snapshot) =>
-      snapshot.docs.map((doc) => Event.fromMap(doc.data(), doc.id)).toList());
+      snapshot.docs.map((doc) => Event.fromMap(doc.data(), doc.id)).toList()
+        ..sort((a, b) => a.date.compareTo(b.date)));
 }
 
 Future<void> updateEvent(
@@ -114,38 +150,62 @@ Future<void> deleteEvent(String id, FirebaseFirestore db) async {
   await db.collection(Collections.events).doc(id).delete();
 }
 
-Future<void> addDriver(String eventId, DocumentReference<User> driverRef,
-    FirebaseFirestore db) async {
+Future<void> addDriver(
+    String eventId, DocumentReference driverRef, FirebaseFirestore db) async {
   final event = await getEvent(eventId, db);
   if (event != null) {
     event.drivers.add(driverRef);
     await updateEvent(eventId, {'drivers': event.drivers}, db);
+    final eventRef = await getEventReference(eventId, db);
+    await db.collection(Collections.users).doc(driverRef.id).update({
+      'registeredEvents': FieldValue.arrayUnion([eventRef])
+    });
+    UserService().refreshUser();
   }
 }
 
-Future<void> addDrunkard(String eventId, DocumentReference<User> drunkardRef,
-    FirebaseFirestore db) async {
+Future<void> addDrunkard(
+    String eventId, DocumentReference drunkardRef, FirebaseFirestore db) async {
   final event = await getEvent(eventId, db);
   if (event != null) {
     event.drunkards.add(drunkardRef);
     await updateEvent(eventId, {'drunkards': event.drunkards}, db);
+    await db
+        .collection(Collections.users)
+        .doc(drunkardRef.id)
+        .update({'registeredEvents': FieldValue.arrayUnion([])});
+    final eventRef = await getEventReference(eventId, db);
+    await db.collection(Collections.users).doc(drunkardRef.id).update({
+      'registeredEvents': FieldValue.arrayUnion([eventRef])
+    });
+    UserService().refreshUser();
   }
 }
 
-Future<void> removeDriver(String eventId, DocumentReference<User> driverRef,
-    FirebaseFirestore db) async {
+Future<void> removeDriver(
+    String eventId, DocumentReference driverRef, FirebaseFirestore db) async {
   final event = await getEvent(eventId, db);
   if (event != null) {
     event.drivers.remove(driverRef);
     await updateEvent(eventId, {'drivers': event.drivers}, db);
+    final eventRef = await getEventReference(eventId, db);
+    await db.collection(Collections.users).doc(driverRef.id).update({
+      'registeredEvents': FieldValue.arrayRemove([eventRef])
+    });
+    UserService().refreshUser();
   }
 }
 
-Future<void> removeDrunkard(String eventId, DocumentReference<User> drunkardRef,
-    FirebaseFirestore db) async {
+Future<void> removeDrunkard(
+    String eventId, DocumentReference drunkardRef, FirebaseFirestore db) async {
   final event = await getEvent(eventId, db);
   if (event != null) {
     event.drunkards.remove(drunkardRef);
     await updateEvent(eventId, {'drunkards': event.drunkards}, db);
+    final eventRef = await getEventReference(eventId, db);
+    await db.collection(Collections.users).doc(drunkardRef.id).update({
+      'registeredEvents': FieldValue.arrayRemove([eventRef])
+    });
+    UserService().refreshUser();
   }
 }

@@ -6,7 +6,7 @@ String getLocalizedMonth(DateTime date, {String locale = 'en'}) {
 }
 
 String getLocalizedDate(DateTime date, {String locale = 'en'}) {
-  return DateFormat.yMMMMEEEEd(locale).format(date); // January 2023
+  return DateFormat.MMMMEEEEd(locale).format(date); // January 2023
 }
 
 String getLocalizedDateInNumberFormat(DateTime date, {String locale = 'en'}) {

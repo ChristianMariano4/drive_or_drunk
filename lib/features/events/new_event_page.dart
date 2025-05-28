@@ -1,24 +1,31 @@
+import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart'
     show FirestoreService;
 import 'package:drive_or_drunk_app/utils/image_utils.dart'
     show base64StringFromImage;
+import 'package:drive_or_drunk_app/utils/time_utils.dart'
+    show getLocalizedDateInNumberFormat;
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
 import 'package:drive_or_drunk_app/widgets/date_input_field.dart';
 import 'package:drive_or_drunk_app/widgets/image_input_field.dart';
 import 'package:drive_or_drunk_app/widgets/theme_change_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class NewEventPage extends StatefulWidget {
-  const NewEventPage({super.key});
+class UpsertEventPage extends StatefulWidget {
+  const UpsertEventPage({super.key, this.event});
+  final Event? event;
 
   @override
-  State<NewEventPage> createState() => _NewEventPageState();
+  State<UpsertEventPage> createState() => _UpsertEventPageState();
 }
 
-class _NewEventPageState extends State<NewEventPage> {
+class _UpsertEventPageState extends State<UpsertEventPage> {
   final FirestoreService _firestoreService = FirestoreService();
+
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -43,27 +50,66 @@ class _NewEventPageState extends State<NewEventPage> {
       _dateController.clear();
       _placeController.clear();
       _imageController.clear();
-
-      _firestoreService.addEvent(
-        Event(
-          name: title,
-          description: description,
-          date: DateTime.parse(date.split('/').reversed.join('-')),
-          place: place,
-          image: imageBase64,
-        ),
+      final upsertEvent = Event(
+        author: currentUser != null
+            ? currentUser!.uid
+            : throw Exception('User is not logged in'),
+        name: title,
+        description: description,
+        date: DateTime.parse(date.split('/').reversed.join('-')),
+        place: place,
+        image: imageBase64,
       );
 
-      // Optionally navigate back or show a success message
-      Navigator.of(context).pop();
+      if (widget.event != null) {
+        _firestoreService.updateEvent(
+          widget.event!.id!,
+          upsertEvent
+              .copyWith(
+                drivers: widget.event!.drivers,
+                drunkards: widget.event!.drunkards,
+              )
+              .toMap(),
+        );
+
+        // Pop twice to remove the old event details page
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(
+          AppRoutes.eventDetails,
+          arguments: upsertEvent.copyWith(
+            id: widget.event!.id,
+          ),
+        );
+      } else {
+        _firestoreService.addEvent(
+          upsertEvent,
+        );
+
+        // Optionally navigate back or show a success message
+        Navigator.of(context).pop();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isUpdate = widget.event != null;
+    if (isUpdate) {
+      _titleController.text = widget.event!.name;
+      _descriptionController.text = widget.event!.description ?? '';
+
+      _dateController.text = getLocalizedDateInNumberFormat(
+        widget.event!.date,
+      );
+      _placeController.text = widget.event!.place;
+      _imageController.text = widget.event!.image ?? '';
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Event'),
+        title: isUpdate
+            ? const Text('Update Event')
+            : const Text('Create New Event'),
         actions: const [ThemeChangeButton()],
       ),
       body: Padding(
@@ -106,6 +152,9 @@ class _NewEventPageState extends State<NewEventPage> {
                 onImageSelected: (image) {
                   _imageController.text = base64StringFromImage(image);
                 },
+                initialImage: _imageController.text.isNotEmpty
+                    ? _imageController.text
+                    : null,
               ),
 
               CustomElevatedButton(

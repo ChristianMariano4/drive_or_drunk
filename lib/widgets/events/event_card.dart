@@ -1,3 +1,4 @@
+import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/utils/image_utils.dart'
@@ -24,7 +25,11 @@ class _EventCardState extends State<EventCard> {
       child: Material(
         child: InkWell(
           onTap: () {
-            // TODO: Navigate to event details page
+            Navigator.pushNamed(
+              context,
+              AppRoutes.eventDetails,
+              arguments: widget.event,
+            );
           },
           child: Stack(
             children: [
