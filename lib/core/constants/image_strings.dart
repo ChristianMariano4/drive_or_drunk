@@ -10,4 +10,7 @@ class Images {
   static const String event1Img = "assets/events/event1.png";
   static const String event2Img = "assets/events/event2.png";
   static const String event3Img = "assets/events/event3.png";
+
+  // Google logo
+  static const String googleLogo = "assets/icons/google_logo.svg";
 }

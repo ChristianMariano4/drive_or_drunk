@@ -1,4 +1,5 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
+import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -8,6 +9,8 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Icon? prefIcon;
   final IconButton? sufIcon;
+  final TextInputType? keyboardType;
+  final List<DateInputFormatter>? inputFormatters;
 
   const CustomTextFormField(
       {super.key,
@@ -16,7 +19,9 @@ class CustomTextFormField extends StatelessWidget {
       this.obscureText = false,
       this.validator,
       this.prefIcon,
-      this.sufIcon});
+      this.sufIcon,
+      this.keyboardType,
+      this.inputFormatters});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,8 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: prefIcon,
@@ -37,19 +44,4 @@ class CustomTextFormField extends StatelessWidget {
       ),
     );
   }
-  // TextFormField(
-  //                           controller: _passwordController,
-  //                           decoration: const InputDecoration(
-  //                             labelText: 'Password',
-  //                             enabledBorder: UnderlineInputBorder(
-  //                               borderSide: BorderSide(
-  //                                   color: Color(0xffffc953),
-  //                                   width: 1.5), //TODO: fix color
-  //                             ),
-
-  //                           obscureText: true,
-  //                           validator: (value) => value!.isEmpty
-  //                               ? 'Please enter a password'
-  //                               : null,
-  //                         ),
 }
