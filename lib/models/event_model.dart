@@ -5,10 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart'
         FirebaseException,
         FirebaseFirestore,
         GeoPoint,
+        Query,
         Timestamp;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
 import 'package:drive_or_drunk_app/services/user_service.dart';
+import 'package:flutter/material.dart';
 
 class Event {
   final String? id;
@@ -148,6 +150,31 @@ Future<void> updateEvent(
 
 Future<void> deleteEvent(String id, FirebaseFirestore db) async {
   await db.collection(Collections.events).doc(id).delete();
+}
+
+Stream<List<Event>> searchEvents(String? eventName, String? place,
+    DateTimeRange? dateRange, FirebaseFirestore db) {
+  Query<Map<String, dynamic>> query = db.collection('Event');
+
+  if (eventName != null && eventName.isNotEmpty) {
+    query = query
+        .where('name', isGreaterThanOrEqualTo: eventName)
+        .where('name', isLessThanOrEqualTo: '$eventName\uf8ff');
+  }
+
+  if (place != null && place.isNotEmpty) {
+    query = query.where('place', isEqualTo: place);
+  }
+
+  if (dateRange != null) {
+    query = query
+        .where('date',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(dateRange.start))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(dateRange.end));
+  }
+
+  return query.snapshots().map((snapshot) =>
+      snapshot.docs.map((doc) => Event.fromMap(doc.data(), doc.id)).toList());
 }
 
 Future<void> addDriver(

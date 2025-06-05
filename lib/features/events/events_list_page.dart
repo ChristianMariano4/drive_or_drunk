@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart' show AppSizes;
 import 'package:drive_or_drunk_app/models/event_model.dart';
@@ -8,7 +10,11 @@ import 'package:drive_or_drunk_app/widgets/events/event_card.dart';
 import 'package:flutter/material.dart';
 
 class EventsListPage extends StatefulWidget {
-  const EventsListPage({super.key});
+  final String? eventName;
+  final String? place;
+  final DateTimeRange? dateRange;
+
+  const EventsListPage({super.key, this.eventName, this.place, this.dateRange});
 
   @override
   State<EventsListPage> createState() => _EventsListPageState();
@@ -21,7 +27,17 @@ class _EventsListPageState extends State<EventsListPage> {
   @override
   void initState() {
     super.initState();
-    events = _firestoreService.getEvents();
+
+    if (widget.eventName != null ||
+        widget.place != null ||
+        widget.dateRange != null) {
+      events = FirestoreService().searchEvents(
+          eventName: widget.eventName,
+          place: widget.place,
+          dateRange: widget.dateRange);
+    } else {
+      events = _firestoreService.getEvents();
+    }
   }
 
   @override

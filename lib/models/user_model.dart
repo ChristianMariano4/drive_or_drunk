@@ -90,6 +90,16 @@ Future<User?> getUser(String id, FirebaseFirestore db) async {
   return null;
 }
 
+Stream<List<User>> searchUsersByName(String name, FirebaseFirestore db) {
+  final query = db
+      .collection('User')
+      .where('name', isGreaterThanOrEqualTo: name)
+      .where('name', isLessThanOrEqualTo: '$name\uf8ff');
+
+  return query.snapshots().map((snapshot) =>
+      snapshot.docs.map((doc) => User.fromMap(doc.data(), doc.id)).toList());
+}
+
 Stream<List<User>> getUsers(FirebaseFirestore db) {
   return db.collection(Collections.users).snapshots().map((snapshot) =>
       snapshot.docs.map((doc) => User.fromMap(doc.data(), doc.id)).toList());

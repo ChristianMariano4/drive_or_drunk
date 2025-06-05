@@ -1,92 +1,148 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart';
+import 'package:drive_or_drunk_app/services/firestore_service.dart';
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UserSearchForm extends StatelessWidget {
+class UserSearchForm extends StatefulWidget {
   const UserSearchForm({super.key});
+
+  @override
+  State<UserSearchForm> createState() => _UserSearchFormState();
+}
+
+class _UserSearchFormState extends State<UserSearchForm> {
+  final TextEditingController _controller = TextEditingController();
+  final FirestoreService _firestoreService = FirestoreService();
+  String _searchText = '';
+  Stream<List<User>>? _searchResults;
+
+  void _performSearch() {
+    final stream = _firestoreService.searchUsersByName(_searchText.trim());
+
+    // Ascolta temporaneamente i risultati per stamparli
+    stream.first.then((results) {
+      for (var user in results) {
+        print('User found: ${user.name}, email: ${user.email}');
+      }
+    });
+
+    setState(() {
+      _searchResults = stream;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isLight = context.watch<ThemeProvider>().themeMode == ThemeMode.light;
     final fillColor = Theme.of(context).inputDecorationTheme.fillColor;
 
-    return Container(
-      padding: const EdgeInsets.all(AppSizes.md),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.md),
-      ),
-      child: Column(
-        children: [
-          // Search Bar
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Search users...',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: isLight ? AppColors.grey : fillColor,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
-                borderSide: BorderSide.none,
-              ),
-            ),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(AppSizes.sm),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.md),
           ),
-          const SizedBox(height: AppSizes.spaceBtwItems),
-
-          // Place & Date Filters
-          Row(
+          child: Column(
             children: [
-              // Place Filter
-              Expanded(
-                child: TextField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText: "Select Place",
-                    prefixIcon: const Icon(Icons.place),
-                    filled: true,
-                    fillColor: isLight ? AppColors.grey : fillColor,
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.borderRadiusLg),
-                      borderSide: BorderSide.none,
-                    ),
+              // Search Bar
+              TextField(
+                controller: _controller,
+                onChanged: (value) => setState(() => _searchText = value),
+                decoration: InputDecoration(
+                  hintText: 'Search users',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: isLight ? AppColors.grey : fillColor,
+                  border: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppSizes.borderRadiusLg),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              const SizedBox(width: AppSizes.sm),
+              const SizedBox(height: AppSizes.spaceBtwItems),
 
-              Expanded(
-                child: TextField(
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    hintText: "Pick a Date",
-                    prefixIcon: const Icon(Icons.calendar_today),
-                    filled: true,
-                    fillColor: isLight ? AppColors.grey : fillColor,
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.borderRadiusLg),
-                      borderSide: BorderSide.none,
+              // Optional filters
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        hintText: "Select place",
+                        prefixIcon: const Icon(Icons.place),
+                        filled: true,
+                        fillColor: isLight ? AppColors.grey : fillColor,
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.borderRadiusLg),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(width: AppSizes.sm),
+                  Expanded(
+                    child: TextField(
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        hintText: "Pick a date",
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        filled: true,
+                        fillColor: isLight ? AppColors.grey : fillColor,
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.borderRadiusLg),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSizes.defaultSpace),
+              CustomFilledButton(
+                onPressed: _performSearch,
+                labelText: "Search",
               ),
             ],
           ),
+        ),
+        if (_searchResults != null)
+          StreamBuilder<List<User>>(
+            stream: _searchResults,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text("No users found."),
+                );
+              }
 
-          const SizedBox(height: AppSizes.defaultSpace),
-
-          // Search Button
-          CustomFilledButton(
-            onPressed: () {
-              // TODO:trigger search
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final user = snapshot.data![index];
+                  return ListTile(
+                    leading: const Icon(Icons.person),
+                    title: Text(user.name),
+                    subtitle: Text(user.email),
+                  );
+                },
+              );
             },
-            labelText: "Search",
           ),
-        ],
-      ),
+      ],
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
-import 'package:drive_or_drunk_app/core/constants/app_constants.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
@@ -15,7 +14,6 @@ class DateInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final oldText = oldValue.text;
     final newText = newValue.text;
 
     // Remove any existing slashes from new input
@@ -128,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage>
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(
-                                      AppConstants.horizontalPadding),
+                                      AppSizes.horizontalPadding),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.yellow,
                                     radius: 24,
@@ -153,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage>
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.horizontalPadding),
+                            horizontal: AppSizes.horizontalPadding),
                         child: Form(
                           key: _formKey,
                           child: Column(

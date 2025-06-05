@@ -11,6 +11,7 @@ import 'package:drive_or_drunk_app/models/review_model.dart' as review_model;
 import 'package:drive_or_drunk_app/models/review_model.dart' show Review;
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/models/user_model.dart' show User;
+import 'package:flutter/material.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -30,6 +31,10 @@ class FirestoreService {
 
   Stream<List<User>> getUsers() {
     return user_model.getUsers(_db);
+  }
+
+  Stream<List<User>> searchUsersByName(String name) {
+    return user_model.searchUsersByName(name, _db);
   }
 
   Future<void> updateUser(String id, Map<String, dynamic> data) async {
@@ -85,6 +90,14 @@ class FirestoreService {
 
   Stream<List<Event>> getEvents() {
     return event_model.getEvents(_db);
+  }
+
+  Stream<List<Event>> searchEvents({
+    String? eventName,
+    String? place,
+    DateTimeRange? dateRange,
+  }) {
+    return event_model.searchEvents(eventName, place, dateRange, _db);
   }
 
   Future<void> updateEvent(String id, Map<String, dynamic> data) async {

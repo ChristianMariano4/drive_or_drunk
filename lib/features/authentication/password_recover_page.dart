@@ -1,11 +1,9 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
-import 'package:drive_or_drunk_app/core/constants/app_constants.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/utils/validation.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
-import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
 import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,8 +52,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
                   Alignment.lerp(Alignment.center, Alignment.topLeft, 0.40),
               child: Row(children: [
                 Padding(
-                    padding:
-                        const EdgeInsets.all(AppConstants.horizontalPadding),
+                    padding: const EdgeInsets.all(AppSizes.horizontalPadding),
                     child: CircleAvatar(
                         backgroundColor: AppColors.yellow,
                         radius: 24,
