@@ -149,53 +149,57 @@ class ProfilePageState extends State<ProfilePage> {
                                                 color: AppColors.black)),
                                   ]),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: 40,
-                                  right: owner.name.length >= 12
-                                      ? 0
-                                      : MediaQuery.of(context).size.width *
-                                          0.15),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: ValueListenableBuilder<bool>(
-                                  valueListenable: isFavorite,
-                                  builder: (context, value, _) {
-                                    return IconButton(
-                                      icon: Icon(
-                                        value ? Icons.star : Icons.star_border,
-                                      ),
-                                      color: value
-                                          ? AppColors.yellow
-                                          : AppColors.yellow,
-                                      iconSize: 40,
-                                      onPressed: _toggleFavorite,
-                                    );
-                                  },
+                            if (widget.owner != (currentUser!.id ?? '')) ...[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: 40,
+                                    right: owner.name.length >= 12
+                                        ? 0
+                                        : MediaQuery.of(context).size.width *
+                                            0.15),
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: ValueListenableBuilder<bool>(
+                                    valueListenable: isFavorite,
+                                    builder: (context, value, _) {
+                                      return IconButton(
+                                        icon: Icon(
+                                          value
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                        ),
+                                        color: value
+                                            ? AppColors.yellow
+                                            : AppColors.yellow,
+                                        iconSize: 40,
+                                        onPressed: _toggleFavorite,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 40,
-                                  right: owner.name.length >= 12
-                                      ? 0
-                                      : MediaQuery.of(context).size.width *
-                                          0.15),
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                      icon: const Icon(Icons.chat_rounded),
-                                      iconSize: 36,
-                                      color: AppColors.primaryColor,
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, AppRoutes.chatpage,
-                                            arguments: {
-                                              'otherUserid': owner.id
-                                            });
-                                      })),
-                            )
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 40,
+                                    right: owner.name.length >= 12
+                                        ? 0
+                                        : MediaQuery.of(context).size.width *
+                                            0.15),
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                        icon: const Icon(Icons.chat_rounded),
+                                        iconSize: 36,
+                                        color: AppColors.primaryColor,
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, AppRoutes.chatpage,
+                                              arguments: {
+                                                'otherUserid': owner.id
+                                              });
+                                        })),
+                              )
+                            ]
                           ],
                         ),
                       ],
