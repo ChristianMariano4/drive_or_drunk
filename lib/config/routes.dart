@@ -2,6 +2,7 @@ import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/password_recover_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:drive_or_drunk_app/features/events/event_detail_page.dart';
+import 'package:drive_or_drunk_app/features/chat/chat_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
@@ -27,7 +28,9 @@ class AppRoutes {
   static const String reviewlist = '/reviewlist';
   static const String eventsList = '/eventsList';
   static const String upsertEvent = '/upsertEvent';
+  static const String chatpage = '/chatpage';
   static const String eventDetails = '/eventDetails';
+
   static const recoverPassword = '/recoverPassword';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -72,7 +75,7 @@ class AppRoutes {
         return authenticatedRoute(
             builder: (_) => const RegisterPage(), routeName: register);
       case profile:
-        final user = settings.arguments as user_model.User;
+        final user = settings.arguments as String;
         return authenticatedRoute(
             builder: (_) => ProfilePage(owner: user), routeName: profile);
       case navMenu:
@@ -103,7 +106,11 @@ class AppRoutes {
         return authenticatedRoute(
             builder: (_) => const PasswordRecoverPage(),
             routeName: recoverPassword);
-
+      case chatpage:
+        final args = settings.arguments as Map<String, dynamic>;
+        final id = args['otherUserid'] as String;
+        return authenticatedRoute(
+            builder: (_) => ChatPage(otherUserid: id), routeName: chatpage);
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

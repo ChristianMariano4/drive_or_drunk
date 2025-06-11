@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +10,10 @@ class CustomTextFormField extends StatelessWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final Icon? prefIcon;
-  final IconButton? sufIcon;
+  final Widget? sufIcon;
   final TextInputType? keyboardType;
   final List<DateInputFormatter>? inputFormatters;
+  final bool isChatForm;
 
   const CustomTextFormField(
       {super.key,
@@ -21,7 +24,8 @@ class CustomTextFormField extends StatelessWidget {
       this.prefIcon,
       this.sufIcon,
       this.keyboardType,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.isChatForm = false});
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +36,21 @@ class CustomTextFormField extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
-        labelText: labelText,
-        prefixIcon: prefIcon,
-        suffixIcon: sufIcon,
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColors.grey, width: 1.5),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: AppColors.yellow, width: 2.0)),
-        fillColor: AppColors.white,
-      ),
+          labelText: labelText,
+          prefixIcon: prefIcon,
+          suffixIcon: sufIcon,
+          enabledBorder: UnderlineInputBorder(
+            borderRadius:
+                isChatForm ? BorderRadius.circular(16) : BorderRadius.zero,
+            borderSide: const BorderSide(color: AppColors.grey, width: 1.5),
+          ),
+          focusedBorder: UnderlineInputBorder(
+              borderRadius:
+                  isChatForm ? BorderRadius.circular(16) : BorderRadius.zero,
+              borderSide: isChatForm
+                  ? const BorderSide(color: AppColors.primaryColor, width: 2.0)
+                  : const BorderSide(color: AppColors.yellow, width: 2.0)),
+          fillColor: isChatForm ? AppColors.grey : AppColors.white),
     );
   }
 }

@@ -1,6 +1,11 @@
+import 'package:drive_or_drunk_app/features/chat/chat_list_page.dart';
+import 'package:drive_or_drunk_app/features/chat/chat_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart'
     show EventsListPage;
 import 'package:drive_or_drunk_app/features/homepage.dart';
+import 'package:drive_or_drunk_app/features/profilepage.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -15,10 +20,9 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final _screens = [
     const HomePage(),
     const EventsListPage(),
-    Container(color: Colors.yellow),
-    Container(color: Colors.black)
+    ChatListPage(),
+    ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid)
   ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

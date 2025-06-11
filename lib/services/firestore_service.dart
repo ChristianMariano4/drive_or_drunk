@@ -160,6 +160,11 @@ class FirestoreService {
   }
 
 // ==================== CONVERSATION METHODS ====================
+
+  Future<void> setMessageSeen(String messageId) async {
+    return conversation_model.setMessageSeen(messageId, _db);
+  }
+
   Future<void> addConversation(Conversation conversation) async {
     return conversation_model.addConversation(conversation, _db);
   }
@@ -168,8 +173,9 @@ class FirestoreService {
     return conversation_model.getConversation(id, _db);
   }
 
-  Stream<List<Conversation>> getConversations() {
-    return conversation_model.getConversations(_db);
+  Stream<List<conversation_model.Conversation>> getConversations(
+      DocumentReference userReference) {
+    return conversation_model.getConversations(_db, userReference);
   }
 
   Future<void> updateConversation(String id, Map<String, dynamic> data) async {
@@ -180,9 +186,30 @@ class FirestoreService {
     return conversation_model.deleteConversation(id, _db);
   }
 
-  Future<void> addMessageToConversation(
+  Future<void> sendMessage(
       String conversationId, conversation_model.Message message) async {
-    return conversation_model.addMessage(conversationId, message, _db);
+    return conversation_model.sendMessage(conversationId, message, _db);
+  }
+
+  Future<String> getOrCreateConversationId(
+      DocumentReference user1, DocumentReference user2) async {
+    return conversation_model.getOrCreateConversationId(user1, user2, _db);
+  }
+
+  Stream<List<conversation_model.Message>> getMessageStream(
+      String conversationId) {
+    return conversation_model.getMessagesStream(conversationId, _db);
+  }
+
+  Future<conversation_model.Message?> getMostRecentMessageFromConversation(
+      Conversation conversation) async {
+    return conversation_model.getMostRecentMessageFromConversation(
+        conversation, _db);
+  }
+
+  Future<int> countUnseenMessages(
+      Conversation conversationId, String userId) async {
+    return conversation_model.countUnseenMessages(conversationId, userId, _db);
   }
 
 // ==================== REVIEW METHODS ====================

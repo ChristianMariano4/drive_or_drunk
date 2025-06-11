@@ -13,6 +13,25 @@ String getLocalizedDateInNumberFormat(DateTime date, {String locale = 'en'}) {
   return DateFormat('dd/MM/yyyy', locale).format(date); // 01/01/2023
 }
 
+String formatChatTimestamp(DateTime dateTime) {
+  final now = DateTime.now();
+
+  // Se è oggi, mostra solo l'orario
+  if (dateTime.year == now.year &&
+      dateTime.month == now.month &&
+      dateTime.day == now.day) {
+    return DateFormat('HH:mm').format(dateTime);
+  }
+
+  // Se è nello stesso anno, ma non oggi, mostra giorno e mese
+  if (dateTime.year == now.year) {
+    return DateFormat('d MMM HH:mm').format(dateTime); // es: 18 mag 14:30
+  }
+
+  // Se è di un anno diverso, mostra anche l'anno
+  return DateFormat('d MMM yyyy HH:mm').format(dateTime); // es: 18 mag 2023
+}
+
 String getMonthString(int month) {
   const months = [
     '01',

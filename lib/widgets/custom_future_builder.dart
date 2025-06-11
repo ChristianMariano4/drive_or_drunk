@@ -18,7 +18,7 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
       future: widget.future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center();
         } else if (snapshot.hasError) {
           debugPrint("Error loading future: ${snapshot.error}");
           return const Icon(Icons.error);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomStreamBuilder<T> extends StatelessWidget {
+  final ScrollController? scrollController;
   final Stream<List<T>> stream;
   final Widget loadingWidget;
   final Widget errorWidget;
@@ -9,6 +10,7 @@ class CustomStreamBuilder<T> extends StatelessWidget {
 
   const CustomStreamBuilder({
     super.key,
+    this.scrollController,
     required this.stream,
     required this.customListTileBuilder,
     this.verbose = false,
@@ -41,7 +43,17 @@ class CustomStreamBuilder<T> extends StatelessWidget {
           return const Center(child: Text('No item found.'));
         }
 
+        if (scrollController != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (scrollController!.hasClients) {
+              scrollController!.jumpTo(
+                scrollController!.position.maxScrollExtent,
+              );
+            }
+          });
+        }
         return ListView.builder(
+          controller: scrollController,
           shrinkWrap: true,
           itemCount: items.length,
           itemBuilder: (context, index) {

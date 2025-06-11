@@ -18,8 +18,6 @@ class User {
   final List<DocumentReference> favoriteEvents;
   final List<DocumentReference> favoriteUsers;
   final List<DocumentReference> reviews;
-  // TODO: add a conversations field to the User model
-  // TODO: add a list of favorite users field to the User model
 
   User({
     this.id,
