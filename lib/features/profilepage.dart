@@ -59,7 +59,9 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: widget.owner == currentUser!.id
+              ? const Text("Your Profile")
+              : const Text('Profile'),
           actions: [
             IconButton(
               icon: const Icon(Icons.logout),
