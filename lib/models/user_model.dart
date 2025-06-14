@@ -170,6 +170,12 @@ Future<List<Review>> getReviewsByType(
       }
     }
   }
+  // Ordina per timestamp decrescente
+  reviewsByType.sort((a, b) {
+    final aTimestamp = a.timestamp;
+    final bTimestamp = b.timestamp;
+    return bTimestamp.compareTo(aTimestamp);
+  });
   return reviewsByType;
 }
 

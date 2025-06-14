@@ -27,9 +27,9 @@ void main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('en', null);
-  await initializeDateFormatting('tr', null);
-  await initializeDateFormatting('it', null);
+  await initializeDateFormatting('en');
+  await initializeDateFormatting('tr');
+  await initializeDateFormatting('it');
 
   if (dotenv.env['GOOGLE_API_KEY'] == null ||
       dotenv.env['GOOGLE_API_KEY']!.isEmpty) {

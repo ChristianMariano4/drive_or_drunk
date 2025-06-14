@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'
         Timestamp;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
-import 'package:drive_or_drunk_app/models/user_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:rxdart/rxdart.dart';
 

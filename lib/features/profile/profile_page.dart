@@ -185,7 +185,7 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: widget.owner == currentUser!.id
+          title: widget.owner == FirebaseAuth.instance.currentUser!.uid
               ? const Text("Your Profile")
               : const Text('Profile'),
           actions: [

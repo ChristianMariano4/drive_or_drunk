@@ -4,29 +4,6 @@ import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
 import 'package:drive_or_drunk_app/models/user_model.dart';
 
-class Comment {
-  final DocumentReference author;
-  final String text;
-  final Timestamp? timestamp;
-
-  Comment({required this.author, required this.text, this.timestamp});
-
-  factory Comment.fromMap(Map<String, dynamic> data) {
-    return Comment(
-        author: data['author'],
-        text: data['text'],
-        timestamp: data['timestamp'] ?? Timestamp.now());
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'author': author,
-      'text': text,
-      'timestamp': timestamp,
-    };
-  }
-}
-
 class ReviewType {
   static const String drunkard = 'drunkard';
   static const String driver = 'driver';
@@ -35,18 +12,18 @@ class ReviewType {
 class Review {
   final String? id;
   final DocumentReference author;
-  final List<Comment> comments;
   final String text;
   final String type;
   final double rating;
+  final Timestamp timestamp;
 
   Review(
       {this.id,
       required this.author,
       required this.type,
       required this.text,
-      this.comments = const [],
-      required this.rating});
+      required this.rating,
+      required this.timestamp});
 
   factory Review.fromMap(Map<String, dynamic> data, String documentId) {
     return Review(
@@ -54,18 +31,16 @@ class Review {
         author: data['author'],
         type: data['type'],
         text: data['text'],
-        comments: List<Comment>.from((data['comments'] as List<dynamic>? ?? [])
-            .map((comment) => Comment.fromMap(comment))
-            .toList()),
+        timestamp: data['timestamp'] as Timestamp,
         rating: (data['rating'] as num).toDouble());
   }
 
   Map<String, dynamic> toMap() {
     return {
       'author': author,
-      'comments': comments.map((comment) => comment.toMap()).toList(),
       'type': type,
       'rating': rating,
+      'timestamp': timestamp,
     };
   }
 }
@@ -100,15 +75,6 @@ Future<void> updateReview(
 
 Future<void> deleteReview(String id, FirebaseFirestore db) async {
   await db.collection(Collections.reviews).doc(id).delete();
-}
-
-Future<void> addComment(
-    String reviewId, Comment comment, FirebaseFirestore db) async {
-  final review = await getReview(reviewId, db);
-  if (review != null) {
-    review.comments.add(comment);
-    await updateReview(reviewId, review.toMap(), db);
-  }
 }
 
 Future<User> getAuthor(Review review, FirebaseFirestore db) async {

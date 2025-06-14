@@ -241,11 +241,6 @@ class FirestoreService {
     return review_model.deleteReview(id, _db);
   }
 
-  Future<void> addCommentToReview(
-      String reviewId, review_model.Comment comment) async {
-    return review_model.addComment(reviewId, comment, _db);
-  }
-
   Future<User> getAuthor(Review review) async {
     return review_model.getAuthor(review, _db);
   }

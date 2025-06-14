@@ -1,7 +1,8 @@
 import 'package:drive_or_drunk_app/features/chat/chat_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_map_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
-import 'package:drive_or_drunk_app/features/profilepage.dart';
+import 'package:drive_or_drunk_app/features/profile/profile_page.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
           height: 80,
           elevation: 0,
           selectedIndex: _selectedIndex,
-          indicatorColor: Color(0xFF6B9EC5),
+          indicatorColor: const Color(0xFF6B9EC5),
           onDestinationSelected: (index) => _onItemTapped(index),
           destinations: const [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

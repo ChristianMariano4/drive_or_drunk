@@ -2,6 +2,7 @@ import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart';
 import 'package:drive_or_drunk_app/utils/image_utils.dart';
+import 'package:drive_or_drunk_app/utils/time_utils.dart';
 import 'package:drive_or_drunk_app/widgets/custom_future_builder.dart';
 import 'package:drive_or_drunk_app/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
@@ -33,28 +34,48 @@ class ReviewsListBody extends StatelessWidget {
                     Row(
                       spacing: 30,
                       children: [
-                        Row(
-                            spacing: 5,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage: imageProviderFromBase64(
-                                      author.profilePicture ?? '')),
-                              Text(
-                                  name.length <= 20
-                                      ? name.toUpperCase()
-                                      : "${name.substring(0, 18).toUpperCase()}...",
-                                  softWrap: false,
-                                  overflow: TextOverflow.fade,
+                        Column(
+                          spacing: 10,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                                spacing: 7,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CircleAvatar(
+                                      radius: 15,
+                                      backgroundImage: imageProviderFromBase64(
+                                          author.profilePicture ?? '')),
+                                  Text(
+                                      name.length <= 20
+                                          ? name.toUpperCase()
+                                          : "${name.substring(0, 18).toUpperCase()}...",
+                                      softWrap: false,
+                                      overflow: TextOverflow.fade,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(
+                                              color: AppColors.primaryColor,
+                                              fontSize: 15))
+                                ]),
+                            Row(
+                              spacing: 15,
+                              children: [
+                                StarRating(rating: item.rating, size: 17),
+                                Text(
+                                  getLocalizedDateInNumberFormat(
+                                      item.timestamp.toDate()),
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge
-                                      ?.copyWith(
-                                        color: AppColors.primaryColor,
-                                      ))
-                            ]),
-                        StarRating(rating: item.rating),
+                                      ?.copyWith(color: AppColors.black),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                     Row(

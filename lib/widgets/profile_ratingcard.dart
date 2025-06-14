@@ -54,7 +54,7 @@ class ProfileRatingcard extends StatelessWidget {
                                 .labelLarge
                                 ?.copyWith(color: AppColors.primaryColor),
                           ),
-                          StarRating(rating: avg!)
+                          StarRating(rating: avg!, size: 20)
                         ]),
                       ] else
                         ...[],
