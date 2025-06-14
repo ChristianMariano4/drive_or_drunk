@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
 import 'package:flutter/material.dart';

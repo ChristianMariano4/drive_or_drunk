@@ -1,6 +1,5 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
-import 'package:drive_or_drunk_app/core/constants/image_strings.dart';
 import 'package:drive_or_drunk_app/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 

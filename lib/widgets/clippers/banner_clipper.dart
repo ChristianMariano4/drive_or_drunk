@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BannerShapeClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    final radius = 80.0; // Adjust this for roundness
+    const radius = 80.0; // Adjust this for roundness
 
     final path = Path();
     path.moveTo(0, 0); // top-left

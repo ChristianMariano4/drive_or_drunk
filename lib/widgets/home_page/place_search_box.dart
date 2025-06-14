@@ -34,7 +34,7 @@ class _PlaceSearchBoxState extends State<PlaceSearchBox> {
     final result = await showDialog<String>(
       context: context,
       builder: (context) {
-        String tempText = selectedText ?? '';
+        final String tempText = selectedText ?? '';
 
         return Dialog(
           insetPadding: EdgeInsets.symmetric(

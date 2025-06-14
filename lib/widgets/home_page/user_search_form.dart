@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';

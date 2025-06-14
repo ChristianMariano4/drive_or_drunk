@@ -21,9 +21,9 @@ void main() async {
   );
 
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('en', null);
-  await initializeDateFormatting('tr', null);
-  await initializeDateFormatting('it', null);
+  await initializeDateFormatting('en');
+  await initializeDateFormatting('tr');
+  await initializeDateFormatting('it');
 
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
