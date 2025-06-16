@@ -2,6 +2,8 @@ import 'package:drive_or_drunk_app/features/chat/chat_list_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_map_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profile/profile_page.dart';
+import 'package:drive_or_drunk_app/features/profile/review_creation_page.dart';
+import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +12,20 @@ class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
 
   @override
-  _NavigationMenuState createState() => _NavigationMenuState();
+  NavigationMenuState createState() => NavigationMenuState();
 }
 
-class _NavigationMenuState extends State<NavigationMenu> {
+class NavigationMenuState extends State<NavigationMenu> {
   int _selectedIndex = 0;
   final _screens = [
     const HomePage(),
     const EventsMapPage(),
     ChatListPage(),
-    ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid)
+    ReviewCreationPage(
+      authorId: FirebaseAuth.instance.currentUser!.uid,
+      receiverId: FirebaseAuth.instance.currentUser!.uid,
+      reviewType: ReviewType.driver,
+    ),
   ];
   void _onItemTapped(int index) {
     setState(() {

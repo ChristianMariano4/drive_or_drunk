@@ -19,10 +19,11 @@ class ChatBubble extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: userNumber == 1 ? AppColors.primaryColor : AppColors.white,
       ),
-      child: Text(message,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color:
-                  userNumber == 1 ? AppColors.white : AppColors.primaryColor)),
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: userNumber == 1 ? AppColors.white : AppColors.primaryColor),
+      ),
     );
   }
 }

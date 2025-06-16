@@ -117,20 +117,22 @@ class ChatPageState extends State<ChatPage> {
         ],
       ),
       body: Column(children: [
-        Expanded(
-            child: CustomStreamBuilder(
-                scrollController: scrollController,
-                stream: db.getMessageStream(conversationId!),
-                customListTileBuilder: (message) {
-                  return buildMessageItem(
-                      context, message, db, user1Ref!, user2!);
-                })),
+        Flexible(
+          child: CustomStreamBuilder(
+            stream: db.getMessageStream(conversationId!),
+            customListTileBuilder: (message) {
+              return buildMessageItem(context, message, db, user1Ref!, user2!);
+            },
+
+            isChat: true, // ← spazio per input + tastiera
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
           child: CustomTextFormField(
             controller: _messageController,
             labelText: "Message...",
-            isChatForm: true,
+            type: 1,
             sufIcon: Padding(
               padding: const EdgeInsets.all(10.0),
               child: FilledButton(

@@ -61,7 +61,9 @@ class ReviewsPreview extends StatelessWidget {
                         Row(
                           spacing: 15,
                           children: [
-                            StarRating(rating: reviews![0].rating, size: 17),
+                            StarRating(
+                                rating: reviews![0].rating.toDouble(),
+                                size: 17),
                             Text(
                               getLocalizedDateInNumberFormat(
                                   reviews![0].timestamp.toDate()),

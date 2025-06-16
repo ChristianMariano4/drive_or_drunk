@@ -63,7 +63,8 @@ class ReviewsListBody extends StatelessWidget {
                             Row(
                               spacing: 15,
                               children: [
-                                StarRating(rating: item.rating, size: 17),
+                                StarRating(
+                                    rating: item.rating.toDouble(), size: 17),
                                 Text(
                                   getLocalizedDateInNumberFormat(
                                       item.timestamp.toDate()),
