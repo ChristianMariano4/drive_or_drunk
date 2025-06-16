@@ -12,7 +12,8 @@ class StarRating extends StatelessWidget {
 
     for (int i = 1; i <= 5; i++) {
       if (i <= rating) {
-        stars.add(Icon(Icons.star, color: AppColors.primaryColor, size: size));
+        stars.add(Icon(Icons.star,
+            color: AppColors.primaryColor, size: size, fill: 0.4));
       } else if (i - rating < 1) {
         stars.add(
             Icon(Icons.star_half, color: AppColors.primaryColor, size: size));

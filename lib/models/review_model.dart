@@ -14,7 +14,7 @@ class Review {
   final DocumentReference author;
   final String text;
   final String type;
-  final double rating;
+  final int rating;
   final Timestamp timestamp;
 
   Review(
@@ -32,7 +32,7 @@ class Review {
         type: data['type'],
         text: data['text'],
         timestamp: data['timestamp'] as Timestamp,
-        rating: (data['rating'] as num).toDouble());
+        rating: (data['rating'] as num).toInt());
   }
 
   Map<String, dynamic> toMap() {

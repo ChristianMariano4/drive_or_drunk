@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 class CustomStreamBuilder<T> extends StatelessWidget {
-  final ScrollController? scrollController;
   final Stream<List<T>> stream;
   final Widget loadingWidget;
   final Widget errorWidget;
   final Widget Function(T item) customListTileBuilder;
   final bool verbose;
+  final bool isChat;
 
   const CustomStreamBuilder({
     super.key,
-    this.scrollController,
     required this.stream,
     required this.customListTileBuilder,
     this.verbose = false,
     this.loadingWidget = const CircularProgressIndicator(),
     this.errorWidget = const Icon(Icons.error),
+    this.isChat = false,
   });
 
   @override
@@ -43,21 +43,13 @@ class CustomStreamBuilder<T> extends StatelessWidget {
           return const Center(child: Text('No item found.'));
         }
 
-        if (scrollController != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (scrollController!.hasClients) {
-              scrollController!.jumpTo(
-                scrollController!.position.maxScrollExtent,
-              );
-            }
-          });
-        }
         return ListView.builder(
-          controller: scrollController,
-          shrinkWrap: true,
           itemCount: items.length,
+          reverse: isChat ? true : false,
           itemBuilder: (context, index) {
-            final item = items[index];
+            // se reverse=true, l’item in posizione `0` è l’ultimo messaggio
+            final item =
+                isChat ? items[items.length - 1 - index] : items[index];
             return customListTileBuilder(item);
           },
         );
