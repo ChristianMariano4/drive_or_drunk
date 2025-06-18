@@ -94,15 +94,19 @@ class ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           //TODO Add navigation functionality
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             spacing: 5,
                             children: [
-                              Text("Available Rides",
-                                  style: TextStyle(fontSize: 20)),
-                              Icon(Icons.arrow_forward_ios),
+                              Text(
+                                  widget.owner ==
+                                          FirebaseAuth.instance.currentUser!.uid
+                                      ? "Your Rides"
+                                      : "Available Rides",
+                                  style: const TextStyle(fontSize: 20)),
+                              const Icon(Icons.arrow_forward_ios),
                             ],
                           ),
                         ),
