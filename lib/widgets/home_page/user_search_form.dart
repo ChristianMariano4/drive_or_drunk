@@ -115,32 +115,14 @@ class _UserSearchFormState extends State<UserSearchForm> {
           ),
         ),
         if (_searchResults != null)
-          StreamBuilder<List<User>>(
-            stream: _searchResults,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text("No users found."),
-                );
-              }
-
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final user = snapshot.data![index];
-                  return ListTile(
-                    leading: const Icon(Icons.person),
-                    title: Text(user.name),
-                    subtitle: Text(user.email),
-                  );
-                },
-              );
-            },
+          CustomStreamBuilder<User>(
+            stream: _searchResults!,
+            verbose: true,
+            customListTileBuilder: (user) => ListTile(
+              leading: const Icon(Icons.person),
+              title: Text(user.name),
+              subtitle: Text(user.email),
+            ),
           ),
       ],
     );
