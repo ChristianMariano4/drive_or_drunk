@@ -39,6 +39,7 @@ class Review {
     return {
       'author': author,
       'type': type,
+      'text': text,
       'rating': rating,
       'timestamp': timestamp,
     };
