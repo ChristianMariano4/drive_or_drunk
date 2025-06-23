@@ -206,194 +206,197 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-        body: CustomFutureBuilder(
-            future: Future.wait([db.getUser(widget.owner)]),
-            component: (data) {
-              final owner = data[0] as user_model.User;
-              return Center(
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    if (!owner.isVerified)
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: AppColors.lightOrange,
-                            border: Border.all(
-                                color: Theme.of(context).colorScheme.secondary),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.warning_amber_rounded,
+        body: SingleChildScrollView(
+          child: CustomFutureBuilder(
+              future: Future.wait([db.getUser(widget.owner)]),
+              component: (data) {
+                final owner = data[0] as user_model.User;
+                return Center(
+                  child: Column(
+                    spacing: 10,
+                    children: [
+                      if (!owner.isVerified)
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.lightOrange,
+                              border: Border.all(
                                   color:
                                       Theme.of(context).colorScheme.secondary),
-                              const SizedBox(width: 12),
-                              const Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Identity verification needed',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.black),
-                                    ),
-                                    Text(
-                                      'Upload a driver’s license and a selfie to verify your identity.',
-                                      style: TextStyle(
-                                          fontSize: 12, color: AppColors.black),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    _startVerificationFlow(context),
-                                child: const Text('Verify'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 80),
-                      child: FilledButton(
-                        onPressed: () {
-                          //TODO Add navigation functionality
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            spacing: 5,
-                            children: [
-                              Text(
-                                  widget.owner ==
-                                          FirebaseAuth.instance.currentUser!.uid
-                                      ? "Your Rides"
-                                      : "Available Rides",
-                                  style: const TextStyle(fontSize: 20)),
-                              const Icon(Icons.arrow_forward_ios),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                              radius: 60,
-                              backgroundImage: imageProviderFromBase64(
-                                  owner.profilePicture ?? '')),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Align(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                        owner.name.length <= 20
-                                            ? owner.name.toUpperCase()
-                                            : "${owner.name.substring(0, 18).toUpperCase()}...",
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge
-                                            ?.copyWith(
-                                                fontSize: 26,
-                                                color: AppColors.black)),
-                                    Text(owner.age.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge
-                                            ?.copyWith(
-                                                fontSize: 26,
-                                                color: AppColors.black)),
-                                  ]),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            if (widget.owner != (currentUser!.id ?? '')) ...[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 40,
-                                    right: owner.name.length >= 12
-                                        ? 0
-                                        : MediaQuery.of(context).size.width *
-                                            0.15),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: ValueListenableBuilder<bool>(
-                                    valueListenable: isFavorite,
-                                    builder: (context, value, _) {
-                                      return IconButton(
-                                        icon: Icon(
-                                          value
-                                              ? Icons.star
-                                              : Icons.star_border,
-                                        ),
-                                        color: value
-                                            ? AppColors.yellow
-                                            : AppColors.yellow,
-                                        iconSize: 40,
-                                        onPressed: _toggleFavorite,
-                                      );
-                                    },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.warning_amber_rounded,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                                const SizedBox(width: 12),
+                                const Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Identity verification needed',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.black),
+                                      ),
+                                      Text(
+                                        'Upload a driver’s license and a selfie to verify your identity.',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.black),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 40,
-                                    right: owner.name.length >= 12
-                                        ? 0
-                                        : MediaQuery.of(context).size.width *
-                                            0.15),
-                                child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton(
-                                        icon: const Icon(Icons.chat_rounded),
-                                        iconSize: 36,
-                                        color: AppColors.primaryColor,
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, AppRoutes.chatpage,
-                                              arguments: {
-                                                'otherUserid': owner.id
-                                              });
-                                        })),
-                              )
-                            ]
+                                TextButton(
+                                  onPressed: () =>
+                                      _startVerificationFlow(context),
+                                  child: const Text('Verify'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 80),
+                        child: FilledButton(
+                          onPressed: () {
+                            //TODO Add navigation functionality
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              spacing: 5,
+                              children: [
+                                Text(
+                                    widget.owner ==
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid
+                                        ? "Your Rides"
+                                        : "Available Rides",
+                                    style: const TextStyle(fontSize: 20)),
+                                const Icon(Icons.arrow_forward_ios),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                                radius: 60,
+                                backgroundImage: imageProviderFromBase64(
+                                    owner.profilePicture ?? '')),
                           ],
                         ),
-                      ],
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: ProfileRatingcard(
-                            owner: owner, reviewType: ReviewType.driver)),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: ProfileRatingcard(
-                            owner: owner, reviewType: ReviewType.drunkard)),
-                  ],
-                ),
-              );
-            }));
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Align(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          owner.name.length <= 20
+                                              ? owner.name.toUpperCase()
+                                              : "${owner.name.substring(0, 18).toUpperCase()}...",
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge
+                                              ?.copyWith(fontSize: 26)),
+                                      Text(owner.age.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge
+                                              ?.copyWith(fontSize: 26)),
+                                    ]),
+                              ),
+                              if (widget.owner != (currentUser!.id ?? '')) ...[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 40,
+                                      right: owner.name.length >= 12
+                                          ? 0
+                                          : MediaQuery.of(context).size.width *
+                                              0.15),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: ValueListenableBuilder<bool>(
+                                      valueListenable: isFavorite,
+                                      builder: (context, value, _) {
+                                        return IconButton(
+                                          icon: Icon(
+                                            value
+                                                ? Icons.star
+                                                : Icons.star_border,
+                                          ),
+                                          color: value
+                                              ? AppColors.yellow
+                                              : AppColors.yellow,
+                                          iconSize: 40,
+                                          onPressed: _toggleFavorite,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 40,
+                                      right: owner.name.length >= 12
+                                          ? 0
+                                          : MediaQuery.of(context).size.width *
+                                              0.15),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                          icon: const Icon(Icons.chat_rounded),
+                                          iconSize: 36,
+                                          color: AppColors.primaryColor,
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, AppRoutes.chatpage,
+                                                arguments: {
+                                                  'otherUserid': owner.id
+                                                });
+                                          })),
+                                )
+                              ]
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: ProfileRatingcard(
+                              owner: owner, reviewType: ReviewType.driver)),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: ProfileRatingcard(
+                              owner: owner, reviewType: ReviewType.drunkard)),
+                    ],
+                  ),
+                );
+              }),
+        ));
   }
 }

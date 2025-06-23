@@ -26,6 +26,7 @@ class NavigationMenuState extends State<NavigationMenu> {
       receiverId: FirebaseAuth.instance.currentUser!.uid,
       reviewType: ReviewType.driver,
     ),
+    ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid),
   ];
   void _onItemTapped(int index) {
     setState(() {

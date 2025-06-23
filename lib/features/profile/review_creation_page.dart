@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
+import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart';
 import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ReviewCreationPage extends StatefulWidget {
   final String authorId;
@@ -45,16 +47,18 @@ class _ReviewCreationPageState extends State<ReviewCreationPage> {
       final authorRef =
           await firestoreService.getUserReference(widget.authorId);
       final receiver = await firestoreService.getUser(widget.receiverId);
+      debugPrint(reviewTextController.text.trim());
       final review = Review(
         author: authorRef!,
-        text: reviewTextController.text,
+        text: reviewTextController.text.trim(),
         rating: rating,
         type: widget.reviewType,
         timestamp: Timestamp.now(),
       );
+      reviewTextController.clear();
       firestoreService.addReview(review, receiver!);
-      if (!mounted) return;
-      Navigator.pop(context, true); // Return true to indicate success
+      //if (!mounted) return;
+      //Navigator.pop(context, true); // Return true to indicate success
     }
   }
 
@@ -65,7 +69,16 @@ class _ReviewCreationPageState extends State<ReviewCreationPage> {
           title: const Text("Create Review"),
           actions: [
             IconButton(
-                icon: const Icon(Icons.star_rate,
+              icon: Icon(
+                  context.watch<ThemeProvider>().themeMode == ThemeMode.light
+                      ? Icons.dark_mode
+                      : Icons.light_mode),
+              onPressed: () {
+                context.read<ThemeProvider>().toggleTheme();
+              },
+            ),
+            IconButton(
+                icon: const Icon(Icons.done,
                     size: 30, color: AppColors.primaryColor, weight: 700),
                 onPressed: submitReview),
           ],
@@ -109,10 +122,13 @@ class _ReviewCreationPageState extends State<ReviewCreationPage> {
                     children: [
                       const Text("Text:", style: TextStyle(fontSize: 18)),
                       Container(
-                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: Colors.transparent,
-                          border: Border.all(),
+                          border: Border.all(
+                              color: context.watch<ThemeProvider>().themeMode ==
+                                      ThemeMode.light
+                                  ? AppColors.black
+                                  : AppColors.white),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: CustomTextFormField(

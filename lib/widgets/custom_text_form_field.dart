@@ -60,7 +60,7 @@ class CustomTextFormField extends StatelessWidget {
                   : type == 0
                       ? const BorderSide(color: AppColors.yellow, width: 2.0)
                       : const BorderSide(color: Colors.transparent, width: 0)),
-          fillColor: type == 1 ? AppColors.grey : AppColors.white),
+          fillColor: type != 0 ? AppColors.grey : AppColors.white),
     );
   }
 }

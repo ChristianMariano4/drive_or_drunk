@@ -65,13 +65,9 @@ class ReviewsPreview extends StatelessWidget {
                                 rating: reviews![0].rating.toDouble(),
                                 size: 17),
                             Text(
-                              getLocalizedDateInNumberFormat(
-                                  reviews![0].timestamp.toDate()),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(color: AppColors.black),
-                            ),
+                                getLocalizedDateInNumberFormat(
+                                    reviews![0].timestamp.toDate()),
+                                style: Theme.of(context).textTheme.labelLarge),
                           ],
                         ),
                       ],
@@ -82,10 +78,7 @@ class ReviewsPreview extends StatelessWidget {
                   children: [
                     Expanded(
                         child: Text("${reviews![0].text}\n",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(color: AppColors.black),
+                            style: Theme.of(context).textTheme.labelLarge,
                             maxLines: 4,
                             overflow: TextOverflow.ellipsis)),
                   ],
