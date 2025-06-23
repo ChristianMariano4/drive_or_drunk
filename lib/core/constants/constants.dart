@@ -20,3 +20,5 @@ class ConstantsText {
   static const String credentialLoginErrorText = 'Error loading credentials: ';
   static const String continueWith = 'Or continue with';
 }
+
+const double mapCircleRadius = 1500.0; // Radius in meters for the map circle

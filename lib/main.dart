@@ -7,15 +7,21 @@ import 'package:drive_or_drunk_app/features/authentication/firebase_auth_datasou
 import 'package:drive_or_drunk_app/features/authentication/user_provider.dart';
 import 'package:drive_or_drunk_app/firebase_options.dart';
 import 'package:drive_or_drunk_app/navigation_menu.dart';
+import 'package:drive_or_drunk_app/services/api_key_service.dart';
+import 'package:drive_or_drunk_app/services/google_places.dart'
+    show GooglePlaces;
 import 'package:drive_or_drunk_app/services/user_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -24,6 +30,18 @@ void main() async {
   await initializeDateFormatting('en', null);
   await initializeDateFormatting('tr', null);
   await initializeDateFormatting('it', null);
+
+  if (dotenv.env['GOOGLE_API_KEY'] == null ||
+      dotenv.env['GOOGLE_API_KEY']!.isEmpty) {
+    throw Exception('GOOGLE_API_KEY is not set in .env file');
+  }
+  try {
+    await ApiKeyService.setupApiKey();
+  } catch (e) {
+    debugPrint('Failed to setup API key: $e');
+    // You might want to handle this error appropriately
+  }
+  GooglePlaces.initialize(dotenv.env['GOOGLE_API_KEY']!);
 
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();

@@ -11,4 +11,5 @@ class AppColors {
   static const Color filledBackgroundColorLight =
       Color.fromRGBO(231, 231, 231, 1);
   static const Color filledBackgroundColorDark = Color.fromRGBO(40, 40, 40, 1);
+  static Color lightOrange = Colors.orange.shade50;
 }

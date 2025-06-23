@@ -1,10 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart';
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
+import 'package:drive_or_drunk_app/widgets/custom_stream_builder.dart'
+    show CustomStreamBuilder;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -12,6 +12,7 @@ import 'package:drive_or_drunk_app/models/review_model.dart' show Review;
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/models/user_model.dart' show User;
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -96,8 +97,14 @@ class FirestoreService {
     String? eventName,
     String? place,
     DateTimeRange? dateRange,
+    LatLng? locationSearchCenter,
   }) {
-    return event_model.searchEvents(eventName, place, dateRange, _db);
+    return event_model.searchEvents(
+        eventName: eventName,
+        place: place,
+        dateRange: dateRange,
+        locationSearchCenter: locationSearchCenter,
+        _db);
   }
 
   Future<void> updateEvent(String id, Map<String, dynamic> data) async {

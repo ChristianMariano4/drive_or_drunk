@@ -1,19 +1,20 @@
 import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/password_recover_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/register_page.dart';
-import 'package:drive_or_drunk_app/features/events/event_detail_page.dart';
 import 'package:drive_or_drunk_app/features/chat/chat_page.dart';
+import 'package:drive_or_drunk_app/features/events/event_detail_page.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
+import 'package:drive_or_drunk_app/features/events/events_map_page.dart';
 import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profilepage.dart';
 import 'package:drive_or_drunk_app/features/reviewlistpage.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
-import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/navigation_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -27,6 +28,7 @@ class AppRoutes {
   static const String navMenu = '/navigation';
   static const String reviewlist = '/reviewlist';
   static const String eventsList = '/eventsList';
+  static const String eventsMap = '/eventsMap';
   static const String upsertEvent = '/upsertEvent';
   static const String chatpage = '/chatpage';
   static const String eventDetails = '/eventDetails';
@@ -90,8 +92,15 @@ class AppRoutes {
                 Reviewlistpage(reviews: reviews, reviewType: reviewType),
             routeName: reviewlist);
       case eventsList:
+        final args = settings.arguments as Map<String, dynamic>;
+        final locationSearchCenter = args['locationSearchCenter'] as LatLng?;
         return authenticatedRoute(
-            builder: (_) => const EventsListPage(), routeName: eventsList);
+            builder: (_) =>
+                EventsListPage(locationSearchCenter: locationSearchCenter),
+            routeName: eventsList);
+      case eventsMap:
+        return authenticatedRoute(
+            builder: (_) => const EventsMapPage(), routeName: eventsMap);
       case upsertEvent:
         final event = settings.arguments as Event?;
         return authenticatedRoute(

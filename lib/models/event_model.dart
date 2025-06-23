@@ -8,9 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart'
         Query,
         Timestamp;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
-    show Collections;
+    show Collections, mapCircleRadius;
 import 'package:drive_or_drunk_app/services/user_service.dart';
+import 'package:drive_or_drunk_app/widgets/google_maps.dart'
+    show isLocationWithinRadius;
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Event {
   final String? id;
@@ -35,28 +38,6 @@ class Event {
       this.image,
       required this.date,
       required this.place});
-
-// THIS PART IS PROBABLY NOT NEEDED BUT JUST IN CASE I LEFT IT IN
-  // factory Event.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
-  //     SnapshotOptions? options) {
-  //   final data = snapshot.data();
-  //   debugPrint('Event.fromFirestore: $data');
-  //   return Event(
-  //     name: data?['name'],
-  //     drivers: data?['drivers'],
-  //     drunkards: data?['drunkards'],
-  //     location: data?['location'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toFirestore() {
-  //   return {
-  //     'name': name,
-  //     'drivers': drivers,
-  //     'drunkards': drunkards,
-  //     if (location != null) 'location': location,
-  //   };
-  // }
 
   factory Event.fromMap(Map<String, dynamic> data, String documentId) {
     return Event(
@@ -152,8 +133,11 @@ Future<void> deleteEvent(String id, FirebaseFirestore db) async {
   await db.collection(Collections.events).doc(id).delete();
 }
 
-Stream<List<Event>> searchEvents(String? eventName, String? place,
-    DateTimeRange? dateRange, FirebaseFirestore db) {
+Stream<List<Event>> searchEvents(FirebaseFirestore db,
+    {String? eventName,
+    String? place,
+    DateTimeRange? dateRange,
+    LatLng? locationSearchCenter}) {
   Query<Map<String, dynamic>> query = db.collection('Event');
 
   if (eventName != null && eventName.isNotEmpty) {
@@ -173,8 +157,26 @@ Stream<List<Event>> searchEvents(String? eventName, String? place,
         .where('date', isLessThanOrEqualTo: Timestamp.fromDate(dateRange.end));
   }
 
-  return query.snapshots().map((snapshot) =>
-      snapshot.docs.map((doc) => Event.fromMap(doc.data(), doc.id)).toList());
+  return query.snapshots().map((snapshot) {
+    final List<Event> eventList = [];
+
+    for (var doc in snapshot.docs) {
+      if (locationSearchCenter != null) {
+        final event = Event.fromMap(doc.data(), doc.id);
+
+        if (event.location == null) {
+          continue; // Skip this event if it has no location
+        }
+        if (!isLocationWithinRadius(
+            event.location!, locationSearchCenter, mapCircleRadius)) {
+          continue; // Skip this event if it's not within the search radius
+        }
+      }
+
+      eventList.add(Event.fromMap(doc.data(), doc.id));
+    }
+    return eventList;
+  });
 }
 
 Future<void> addDriver(

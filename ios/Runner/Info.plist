@@ -17,6 +17,12 @@
 			</dict>
 		</array>
 		<!-- End of the Google Sign-in Section -->
+		<!-- Location Permission Section -->
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs location access to provide location-based services.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app needs location access to provide location-based services.</string>
+		<!-- End of Location Permission Section -->
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>

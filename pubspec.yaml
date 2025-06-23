@@ -30,6 +30,9 @@ dependencies:
   geolocator: ^14.0.0
   geocoding: ^3.0.0
   http: ^1.4.0
+  google_maps_flutter: ^2.12.2
+  permission_handler: ^12.0.0+1
+  flutter_dotenv: ^5.2.1
   rxdart: ^0.28.0
   http_parser: ^4.1.2
 
@@ -49,3 +52,5 @@ flutter:
     - assets/events/event3.png
     - assets/icons/google_logo.svg
     - assets/logos/logo_test.png
+    - assets/map_style.json
+    - .env

@@ -68,3 +68,5 @@ firepit-log.txt
 # Ignore generated files
 **/generated_plugin*
 **/GeneratedPlugin*
+
+.env
