@@ -6,7 +6,6 @@ import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profile/profile_page.dart';
 import 'package:drive_or_drunk_app/features/profile/review_creation_page.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
-import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,11 +21,7 @@ class NavigationMenuState extends State<NavigationMenu> {
   final _screens = [
     const HomePage(),
     const EventsListPage(),
-    ReviewCreationPage(
-      authorId: FirebaseAuth.instance.currentUser!.uid,
-      receiverId: FirebaseAuth.instance.currentUser!.uid,
-      reviewType: ReviewType.driver,
-    ),
+    ChatListPage(),
     ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid),
   ];
   void _onItemTapped(int index) {
