@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class ConversationTile extends StatelessWidget {
   final DocumentReference otheruser;
-  final Message message;
+  final Message? message;
   final int unreadCount;
 
   const ConversationTile({
@@ -73,7 +73,7 @@ class ConversationTile extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            message.text,
+                            message != null ? message!.text : "",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -116,10 +116,13 @@ class ConversationTile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text(
-                              formatChatTimestamp(message.timestamp!.toDate()),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+                            if (message != null) ...[
+                              Text(
+                                formatChatTimestamp(
+                                    message!.timestamp!.toDate()),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ]
                           ],
                         ),
                       ),
