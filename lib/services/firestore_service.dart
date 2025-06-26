@@ -137,8 +137,16 @@ class FirestoreService {
     return ride_model.getRide(id, _db);
   }
 
-  Stream<List<Ride>> getRides() {
-    return ride_model.getRides(_db);
+  Stream<List<Ride>> getRidesByDriver(String userId) {
+    return ride_model.getRidesByDriver(userId, _db);
+  }
+
+  Stream<List<Ride>> getRidesByEvent(String eventId) {
+    return ride_model.getRidesByEvent(eventId, _db);
+  }
+
+  Stream<List<Ride>> getRidesByDrunkard(String userId) {
+    return ride_model.getRidesByDrunkard(userId, _db);
   }
 
   Future<void> updateRide(String id, Map<String, dynamic> data) async {

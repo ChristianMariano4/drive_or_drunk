@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentReference, FirebaseException, FirebaseFirestore;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
+import 'package:drive_or_drunk_app/models/event_model.dart';
+import 'package:drive_or_drunk_app/models/user_model.dart';
+import 'package:rxdart/rxdart.dart';
 
 class Ride {
   final String? id;
@@ -40,6 +43,7 @@ class Ride {
 Future<void> addRide(Ride ride, FirebaseFirestore db) async {
   if (ride.id == null) {
     db.collection(Collections.rides).add(ride.toMap());
+    addDriver(ride.eventId.id, ride.driverId!, db);
   } else {
     throw FirebaseException(
       plugin: 'Firestore',
@@ -56,18 +60,49 @@ Future<Ride?> getRide(String id, FirebaseFirestore db) async {
   return null;
 }
 
-Stream<List<Ride>> getRides(FirebaseFirestore db) {
-  return db.collection(Collections.rides).snapshots().map((snapshot) =>
-      snapshot.docs.map((doc) => Ride.fromMap(doc.data(), doc.id)).toList());
+Stream<List<Ride>> getRidesByEvent(String eventId, FirebaseFirestore db) {
+  return getEventReference(eventId, db)
+      .asStream()
+      .asyncExpand((eventReference) {
+    if (eventReference == null) return Stream.value([]);
+    return db
+        .collection(Collections.rides)
+        .where('eventId', isEqualTo: eventReference)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Ride.fromMap(doc.data(), doc.id))
+            .toList());
+  });
 }
 
-Future<void> updateRide(
-    String id, Map<String, dynamic> data, FirebaseFirestore db) async {
-  await db.collection(Collections.rides).doc(id).update(data);
+Stream<List<Ride>> getRidesByDriver(String driverId, FirebaseFirestore db) {
+  return getUserReference(driverId, db)
+      .asStream()
+      .asyncExpand((driverReference) {
+    if (driverReference == null) return Stream.value([]);
+    return db
+        .collection(Collections.rides)
+        .where('driverId', isEqualTo: driverReference)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Ride.fromMap(doc.data(), doc.id))
+            .toList());
+  });
 }
 
-Future<void> deleteRide(String id, FirebaseFirestore db) async {
-  await db.collection(Collections.rides).doc(id).delete();
+Stream<List<Ride>> getRidesByDrunkard(String userId, FirebaseFirestore db) {
+  return getUserReference(userId, db).asStream().asyncExpand((userReference) {
+    if (userReference == null) {
+      return Stream.value([]);
+    }
+    return db
+        .collection(Collections.rides)
+        .where('drunkards', arrayContains: userReference)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Ride.fromMap(doc.data(), doc.id))
+            .toList());
+  });
 }
 
 Future<void> addDrunkard(
@@ -86,4 +121,14 @@ Future<void> removeDrunkard(
     ride.drunkards.remove(drunkardRef);
     await updateRide(rideId, {'drunkards': ride.drunkards}, db);
   }
+}
+
+/// Updates a ride document with the given data.
+Future<void> updateRide(
+    String rideId, Map<String, dynamic> data, FirebaseFirestore db) async {
+  await db.collection(Collections.rides).doc(rideId).update(data);
+}
+
+Future<void> deleteRide(String id, FirebaseFirestore db) async {
+  await db.collection(Collections.rides).doc(id).delete();
 }
