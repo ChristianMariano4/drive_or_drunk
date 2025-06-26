@@ -22,6 +22,7 @@ class NavigationMenuState extends State<NavigationMenu> {
     const EventsMapPage(),
     ChatListPage(),
     ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid),
+    ProfilePage(owner: FirebaseAuth.instance.currentUser!.uid),
   ];
   void _onItemTapped(int index) {
     setState(() {
