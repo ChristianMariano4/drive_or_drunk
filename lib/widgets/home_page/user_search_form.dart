@@ -25,13 +25,6 @@ class _UserSearchFormState extends State<UserSearchForm> {
   void _performSearch() {
     final stream = _firestoreService.searchUsersByName(_searchText.trim());
 
-    // Ascolta temporaneamente i risultati per stamparli
-    stream.first.then((results) {
-      for (var user in results) {
-        print('User found: ${user.name}, email: ${user.email}');
-      }
-    });
-
     setState(() {
       _searchResults = stream;
     });
@@ -118,7 +111,6 @@ class _UserSearchFormState extends State<UserSearchForm> {
         if (_searchResults != null)
           CustomStreamBuilder<User>(
             stream: _searchResults!,
-            verbose: true,
             customListTileBuilder: (user) => ListTile(
               leading: const Icon(Icons.person),
               title: Text(user.name),

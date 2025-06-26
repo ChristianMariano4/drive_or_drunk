@@ -1,13 +1,14 @@
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/features/events/events_list_page.dart';
 import 'package:drive_or_drunk_app/widgets/custom_filled_button.dart';
+import 'package:drive_or_drunk_app/widgets/home_page/date_picker.dart';
 import 'package:drive_or_drunk_app/widgets/home_page/event_search_box.dart';
 import 'package:drive_or_drunk_app/widgets/home_page/place_search_box.dart';
 import 'package:flutter/material.dart';
-import 'package:drive_or_drunk_app/widgets/home_page/date_picker.dart';
 
 class EventSearchForm extends StatefulWidget {
-  const EventSearchForm({super.key});
+  const EventSearchForm({super.key, required this.isFromHomepage});
+  final bool isFromHomepage;
 
   @override
   State<EventSearchForm> createState() => _EventSearchFormState();
@@ -19,16 +20,30 @@ class _EventSearchFormState extends State<EventSearchForm> {
   DateTimeRange? dateRange;
 
   void _performSearch() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EventsListPage(
-          eventName: eventName,
-          place: place,
-          dateRange: dateRange,
+    if (widget.isFromHomepage) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EventsListPage(
+            eventName: eventName,
+            place: place,
+            dateRange: dateRange,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EventsListPage(
+            eventName: eventName,
+            place: place,
+            dateRange: dateRange,
+          ),
+        ),
+      );
+    }
   }
 
   @override

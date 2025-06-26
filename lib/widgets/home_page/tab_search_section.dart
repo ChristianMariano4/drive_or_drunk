@@ -4,7 +4,8 @@ import 'package:drive_or_drunk_app/widgets/home_page/user_search_form.dart';
 import 'package:flutter/material.dart';
 
 class TabSearchSection extends StatefulWidget {
-  const TabSearchSection({super.key});
+  const TabSearchSection({super.key, this.isFromHomepage = true});
+  final bool isFromHomepage;
 
   @override
   State<TabSearchSection> createState() => _TabSearchSectionState();
@@ -44,9 +45,9 @@ class _TabSearchSectionState extends State<TabSearchSection>
         // Usa IndexedStack invece di TabBarView
         IndexedStack(
           index: _tabController.index,
-          children: const [
-            EventSearchForm(),
-            UserSearchForm(),
+          children: [
+            EventSearchForm(isFromHomepage: widget.isFromHomepage),
+            const UserSearchForm(),
           ],
         ),
       ],

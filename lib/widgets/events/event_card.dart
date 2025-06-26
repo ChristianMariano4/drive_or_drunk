@@ -6,8 +6,22 @@ import 'package:drive_or_drunk_app/utils/image_utils.dart'
 import 'package:drive_or_drunk_app/utils/theme_utils.dart';
 import 'package:drive_or_drunk_app/utils/time_utils.dart'
     show getLocalizedMonth;
+import 'package:drive_or_drunk_app/widgets/circular_button_with_background.dart';
 import 'package:drive_or_drunk_app/widgets/clippers/banner_clipper.dart';
 import 'package:flutter/material.dart';
+
+num roundToNearestTen(num value) {
+  if (value < 10) {
+    return value;
+  }
+  if (value < 100) {
+    return (value / 10).round() * 10;
+  } else if (value < 1000) {
+    return (value / 100).round() * 100;
+  } else {
+    return (value / 1000).round() * 1000;
+  }
+}
 
 class EventCard extends StatefulWidget {
   const EventCard({super.key, required this.event});
@@ -51,7 +65,7 @@ class _EventCardState extends State<EventCard> {
                     colors: [
                       (Theme.of(context)
                           .scaffoldBackgroundColor
-                          .withAlpha(isThemeDark(context) ? 180 : 30)),
+                          .withAlpha(isThemeDark(context) ? 180 : 150)),
                       Colors.transparent
                     ],
                   ),
@@ -72,7 +86,7 @@ class _EventCardState extends State<EventCard> {
               // Text and content
               Positioned(
                 left: AppSizes.md * 1.5,
-                bottom: AppSizes.md,
+                bottom: AppSizes.sm,
                 child: Column(
                   spacing: AppSizes.sm,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,8 +102,7 @@ class _EventCardState extends State<EventCard> {
                       spacing: AppSizes.sm,
                       children: [
                         Text(
-                          // TODO: round the number to nearest 10/100/1000
-                          '${widget.event.drivers.length + widget.event.drunkards.length}+ Participants',
+                          '${roundToNearestTen(widget.event.drivers.length + widget.event.drunkards.length)}+ Participants',
                           style: const TextStyle(
                             fontSize: AppSizes.fontSizeMd,
                           ),
@@ -108,22 +121,31 @@ class _EventCardState extends State<EventCard> {
               Positioned(
                 right: AppSizes.md * 1.5,
                 top: AppSizes.md * 2.5,
-                child: Column(
-                  children: [
-                    Text(
-                      widget.event.date.day.toString(),
-                      style: const TextStyle(
-                        fontSize: AppSizes.fontSizeXl,
-                        fontWeight: FontWeight.bold,
+                child: CircularButtonWithBackground(
+                  blendedBackground: true,
+                  padding: const EdgeInsets.only(
+                    top: AppSizes.sm,
+                    bottom: AppSizes.sm,
+                    left: AppSizes.sm * 1.5,
+                    right: AppSizes.sm * 1.5,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.event.date.day.toString(),
+                        style: const TextStyle(
+                          fontSize: AppSizes.fontSizeXl,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      getLocalizedMonth(widget.event.date),
-                      style: const TextStyle(
-                        fontSize: AppSizes.fontSizeMd,
+                      Text(
+                        getLocalizedMonth(widget.event.date),
+                        style: const TextStyle(
+                          fontSize: AppSizes.fontSizeMd,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

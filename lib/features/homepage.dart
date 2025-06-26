@@ -33,21 +33,21 @@ class _HomePageState extends State<HomePage> {
           const ThemeChangeButton(),
         ],
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              HeaderImage(),
+              const HeaderImage(),
               Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   left: AppSizes.md,
                   right: AppSizes.md,
                 ),
                 child: TabSearchSection(),
               ),
-              TrendingSection()
+              const TrendingSection()
             ],
           ),
         ),

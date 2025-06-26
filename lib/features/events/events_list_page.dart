@@ -6,8 +6,10 @@ import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart'
     show FirestoreService;
 import 'package:drive_or_drunk_app/services/google_places.dart';
+import 'package:drive_or_drunk_app/widgets/custom_dropdown.dart';
 import 'package:drive_or_drunk_app/widgets/custom_stream_builder.dart';
 import 'package:drive_or_drunk_app/widgets/events/event_card.dart';
+import 'package:drive_or_drunk_app/widgets/home_page/tab_search_section.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -118,7 +120,11 @@ class _EventsListPageState extends State<EventsListPage> {
                 icon: const Icon(Icons.edit),
                 iconSize: 24,
                 onPressed: () {
-                  // TODO: Change location using the search menu.
+                  CustomDropdown.show(
+                      context: context,
+                      child: const TabSearchSection(
+                        isFromHomepage: false,
+                      ));
                 },
               ),
             ],
