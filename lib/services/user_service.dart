@@ -15,6 +15,19 @@ class UserService {
 
   void refreshUser() => userProvider.loadUser();
   void updateLocally(User user) => userProvider.updateUserLocally(user);
-  User getUser() => userProvider.user!;
-  DocumentReference getUserRef() => userProvider.userRef!;
+  User getUser() {
+    if (userProvider.user == null) {
+      throw Exception('User is not initialized. Call init() first.');
+    }
+    return userProvider.user!;
+  }
+
+  DocumentReference getUserRef() {
+    if (userProvider.user == null) {
+      throw Exception('User is not initialized. Call init() first.');
+    }
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userProvider.user!.id);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/services/firestore_service.dart'
     show FirestoreService;
@@ -33,7 +34,6 @@ class _UpsertEventPageState extends State<UpsertEventPage> {
 
   final ValueNotifier<bool> newLocation = ValueNotifier(false);
 
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
@@ -61,9 +61,9 @@ class _UpsertEventPageState extends State<UpsertEventPage> {
   }
 
   void _saveEvent() {
-    _formKey.currentState
+    GlobalKeys.upsertEventFormKey.currentState
         ?.save(); // Save also calls validate unfortunately I couldn't find a way to avoid it
-    if (_formKey.currentState!.validate()) {
+    if (GlobalKeys.upsertEventFormKey.currentState!.validate()) {
       final String title = _titleController.text;
       final String description = _descriptionController.text;
       final String date = _dateController.text;
@@ -152,7 +152,7 @@ class _UpsertEventPageState extends State<UpsertEventPage> {
       body: Padding(
         padding: const EdgeInsets.all(AppSizes.md),
         child: Form(
-          key: _formKey,
+          key: GlobalKeys.upsertEventFormKey,
           child: SingleChildScrollView(
             child: Column(
               spacing: AppSizes.spaceBtwInputFields,

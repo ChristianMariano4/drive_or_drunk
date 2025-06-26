@@ -17,10 +17,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
-
 class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
@@ -55,7 +51,8 @@ class AppRoutes {
               }
 
               // If user is logged in and trying to access login, redirect to home
-              if (currentUser != null && routeName == login) {
+              if (currentUser != null &&
+                  (routeName == login || routeName == register)) {
                 return const NavigationMenu();
               }
 
@@ -121,10 +118,15 @@ class AppRoutes {
             builder: (_) => UpsertEventPage(event: event),
             routeName: upsertEvent);
       case eventDetails:
-        final event = settings.arguments as Event;
-        return authenticatedRoute(
-            builder: (_) => EventDetailPage(event: event),
-            routeName: eventDetails);
+        try {
+          final event = settings.arguments as Event;
+          return authenticatedRoute(
+              builder: (_) => EventDetailPage(event: event),
+              routeName: eventDetails);
+        } on TypeError {
+          throw Exception(
+              'Invalid arguments for $eventDetails: ${settings.arguments}');
+        }
       case recoverPassword:
         return authenticatedRoute(
             builder: (_) => const PasswordRecoverPage(),

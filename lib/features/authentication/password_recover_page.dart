@@ -1,5 +1,6 @@
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/utils/validation.dart';
@@ -16,12 +17,11 @@ class PasswordRecoverPage extends StatefulWidget {
 }
 
 class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
   void _submit(BuildContext context) {
     // Validate the form first
-    if (_formKey.currentState!.validate()) {
+    if (GlobalKeys.forgotPasswordFormKey.currentState!.validate()) {
       final email = _emailController.text.trim();
       context.read<AuthProvider>().resetPassword(email);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +72,7 @@ class _PasswordRecoverPageState extends State<PasswordRecoverPage> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
             child: Form(
-              key: _formKey,
+              key: GlobalKeys.forgotPasswordFormKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

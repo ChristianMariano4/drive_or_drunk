@@ -1,8 +1,10 @@
 import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
+import 'package:drive_or_drunk_app/services/user_service.dart';
 import 'package:drive_or_drunk_app/utils/validation.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
 import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
@@ -65,7 +67,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage>
     with SingleTickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -78,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage>
   final List<String> _prefixes = ['+39', '+1', '+44', '+33', '+49'];
 
   void _register() async {
-    if (_formKey.currentState!.validate()) {
+    if (GlobalKeys.registerFormKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
         await context.read<AuthProvider>().signUp(
@@ -86,10 +87,12 @@ class _RegisterPageState extends State<RegisterPage>
               password: _passwordController.text.trim(),
               displayName: _nameController.text.trim(),
             );
-        navigatorKey.currentState?.popUntil((route) => route.isFirst);
-        navigatorKey.currentState?.pushNamed(AppRoutes.navMenu);
+        UserService().refreshUser();
+        GlobalKeys.navigatorKey.currentState
+            ?.popUntil((route) => route.isFirst);
+        GlobalKeys.navigatorKey.currentState?.pushNamed(AppRoutes.navMenu);
       } catch (e) {
-        scaffoldMessengerKey.currentState?.showSnackBar(
+        GlobalKeys.scaffoldMessengerKey.currentState?.showSnackBar(
           SnackBar(content: Text(e.toString())),
         );
       } finally {
@@ -153,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage>
                         padding: const EdgeInsets.symmetric(
                             horizontal: AppSizes.horizontalPadding),
                         child: Form(
-                          key: _formKey,
+                          key: GlobalKeys.registerFormKey,
                           child: Column(
                             children: [
                               CustomTextFormField(

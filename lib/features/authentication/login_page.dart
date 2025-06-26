@@ -2,9 +2,12 @@ import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/constants/constants.dart';
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart'
+    show GlobalKeys;
 import 'package:drive_or_drunk_app/core/constants/image_strings.dart';
 import 'package:drive_or_drunk_app/core/theme/wavy_clipper.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
+import 'package:drive_or_drunk_app/services/user_service.dart';
 import 'package:drive_or_drunk_app/utils/validation.dart';
 import 'package:drive_or_drunk_app/widgets/custom_elevated_button.dart';
 import 'package:drive_or_drunk_app/widgets/custom_text_form_field.dart';
@@ -31,7 +34,6 @@ class _LoginPageState extends State<LoginPage>
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -85,7 +87,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!GlobalKeys.loginFormKey.currentState!.validate()) return;
 
     if (mounted) setState(() => _isLoading = true);
 
@@ -102,6 +104,8 @@ class _LoginPageState extends State<LoginPage>
       } else {
         await storage.deleteAll();
       }
+
+      UserService().refreshUser();
 
       if (mounted) {
         _isNavigating = true;
@@ -123,6 +127,7 @@ class _LoginPageState extends State<LoginPage>
 
     try {
       await context.read<AuthProvider>().signInWithGoogle();
+      UserService().refreshUser();
       if (mounted) {
         _isNavigating = true;
         Navigator.pushReplacementNamed(context, AppRoutes.navMenu);
@@ -238,7 +243,7 @@ class _LoginPageState extends State<LoginPage>
         vertical: AppSizes.md,
       ),
       child: Form(
-        key: _formKey,
+        key: GlobalKeys.loginFormKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -1,12 +1,13 @@
 import 'package:drive_or_drunk_app/config/routes.dart';
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart';
 import 'package:drive_or_drunk_app/core/theme/app_theme.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_provider.dart';
 import 'package:drive_or_drunk_app/features/authentication/auth_repository.dart';
 import 'package:drive_or_drunk_app/features/authentication/firebase_auth_datasource.dart';
+import 'package:drive_or_drunk_app/features/authentication/login_page.dart';
 import 'package:drive_or_drunk_app/features/authentication/user_provider.dart';
 import 'package:drive_or_drunk_app/firebase_options.dart';
-import 'package:drive_or_drunk_app/navigation_menu.dart';
 import 'package:drive_or_drunk_app/services/api_key_service.dart';
 import 'package:drive_or_drunk_app/services/google_places.dart'
     show GooglePlaces;
@@ -77,17 +78,21 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    UserService().init(userProvider);
+    try {
+      UserService().init(userProvider);
+    } catch (e) {
+      debugPrint('Error initializing UserService: $e');
+    }
 
     return MaterialApp(
       title: 'Drive or Drunk',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeProvider.themeMode,
-      home: const NavigationMenu(),
-      navigatorKey: navigatorKey,
+      home: const LoginPage(),
+      navigatorKey: GlobalKeys.navigatorKey,
       onGenerateRoute: AppRoutes.generateRoute,
-      scaffoldMessengerKey: scaffoldMessengerKey,
+      scaffoldMessengerKey: GlobalKeys.scaffoldMessengerKey,
     );
   }
 }

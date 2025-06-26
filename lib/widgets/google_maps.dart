@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/widgets/custom_future_builder.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -141,6 +142,9 @@ class _GoogleMapsState extends State<GoogleMaps> {
   }
 
   Future<void> _requestLocationPermission() async {
+    if (kIsWeb) {
+      return;
+    }
     final permission =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
@@ -183,7 +187,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
           zoom: 14.0,
         ),
         markers: widget.markers.values.toSet(),
-        myLocationEnabled: true,
+        myLocationEnabled: !kIsWeb,
         circles: widget.circles,
         onCameraMove: widget.onCameraMove,
       ),

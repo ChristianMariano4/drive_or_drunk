@@ -1,3 +1,4 @@
+import 'package:drive_or_drunk_app/core/constants/global_keys.dart';
 import 'package:drive_or_drunk_app/utils/time_utils.dart'
     show getLocalizedDateInNumberFormat;
 import 'package:flutter/material.dart';
@@ -20,11 +21,10 @@ class DateInputField extends StatefulWidget {
 
 class _DateInputFieldState extends State<DateInputField> {
   String? _dateForceErrorText;
-  final _dateStateKey = GlobalKey<FormFieldState>();
 
   void _clearDate() {
     setState(() {
-      _dateStateKey.currentState?.reset();
+      GlobalKeys.dateInputFormStateKey.currentState?.reset();
       widget.controller.clear();
     });
   }
@@ -71,7 +71,7 @@ class _DateInputFieldState extends State<DateInputField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      key: _dateStateKey,
+      key: GlobalKeys.dateInputFormStateKey,
       onChanged: (value) {
         setState(() {
           _dateForceErrorText = null;
@@ -85,7 +85,7 @@ class _DateInputFieldState extends State<DateInputField> {
           setState(() {
             _dateForceErrorText = 'Please enter a date';
           });
-          _dateStateKey.currentState?.validate();
+          GlobalKeys.dateInputFormStateKey.currentState?.validate();
         }
       },
       onTap: () {
