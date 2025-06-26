@@ -4,7 +4,6 @@ import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart';
-import 'package:rxdart/rxdart.dart';
 
 class Ride {
   final String? id;
