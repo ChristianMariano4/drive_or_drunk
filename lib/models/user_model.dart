@@ -9,6 +9,7 @@ import 'package:drive_or_drunk_app/services/user_service.dart';
 class User {
   final String? id;
   final String name;
+  final String lower_name;
   final String username;
   final String email;
   final bool isVerified;
@@ -31,7 +32,7 @@ class User {
     this.favoriteEvents = const [],
     this.favoriteUsers = const [],
     this.reviews = const [],
-  });
+  }) : lower_name = name.toLowerCase();
 
   factory User.fromMap(Map<String, dynamic> data, String documentId) {
     return User(
@@ -54,6 +55,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'lower_name': name.toLowerCase(),
       'username': username,
       'email': email,
       'isVerified': isVerified,
@@ -89,10 +91,11 @@ Future<User?> getUser(String id, FirebaseFirestore db) async {
 }
 
 Stream<List<User>> searchUsersByName(String name, FirebaseFirestore db) {
+  name = name.toLowerCase();
   final query = db
       .collection('User')
-      .where('name', isGreaterThanOrEqualTo: name)
-      .where('name', isLessThanOrEqualTo: '$name\uf8ff');
+      .where('lower_name', isGreaterThanOrEqualTo: name)
+      .where('lower_name', isLessThanOrEqualTo: '$name\uf8ff');
 
   return query.snapshots().map((snapshot) =>
       snapshot.docs.map((doc) => User.fromMap(doc.data(), doc.id)).toList());

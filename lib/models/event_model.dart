@@ -18,6 +18,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class Event {
   final String? id;
   final String name;
+  final String lower_name;
   final String? description;
   final String? image;
   final DateTime date;
@@ -37,7 +38,8 @@ class Event {
       this.description,
       this.image,
       required this.date,
-      required this.place});
+      required this.place})
+      : lower_name = name.toLowerCase();
 
   factory Event.fromMap(Map<String, dynamic> data, String documentId) {
     return Event(
@@ -138,12 +140,13 @@ Stream<List<Event>> searchEvents(FirebaseFirestore db,
     String? place,
     DateTimeRange? dateRange,
     LatLng? locationSearchCenter}) {
+  eventName = eventName?.toLowerCase();
   Query<Map<String, dynamic>> query = db.collection('Event');
 
   if (eventName != null && eventName.isNotEmpty) {
     query = query
-        .where('name', isGreaterThanOrEqualTo: eventName)
-        .where('name', isLessThanOrEqualTo: '$eventName\uf8ff');
+        .where('lower_name', isGreaterThanOrEqualTo: eventName)
+        .where('lower_name', isLessThanOrEqualTo: '$eventName\uf8ff');
   }
 
   if (place != null && place.isNotEmpty) {

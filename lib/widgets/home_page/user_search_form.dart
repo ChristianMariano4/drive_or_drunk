@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drive_or_drunk_app/config/routes.dart';
 import 'package:drive_or_drunk_app/core/constants/app_colors.dart';
 import 'package:drive_or_drunk_app/core/constants/app_sizes.dart';
 import 'package:drive_or_drunk_app/core/theme/theme_provider.dart';
@@ -23,11 +25,14 @@ class _UserSearchFormState extends State<UserSearchForm> {
   Stream<List<User>>? _searchResults;
 
   void _performSearch() {
-    final stream = _firestoreService.searchUsersByName(_searchText.trim());
+    final query = _controller.text.trim();
+    if (query.isEmpty) return;
 
-    setState(() {
-      _searchResults = stream;
-    });
+    Navigator.pushNamed(
+      context,
+      AppRoutes.usersList,
+      arguments: query,
+    );
   }
 
   @override

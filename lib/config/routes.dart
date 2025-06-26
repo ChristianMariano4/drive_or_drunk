@@ -9,6 +9,7 @@ import 'package:drive_or_drunk_app/features/events/new_event_page.dart';
 import 'package:drive_or_drunk_app/features/homepage.dart';
 import 'package:drive_or_drunk_app/features/profile/profile_page.dart';
 import 'package:drive_or_drunk_app/features/profile/review_list_page.dart';
+import 'package:drive_or_drunk_app/features/users/users_list_page.dart';
 import 'package:drive_or_drunk_app/models/event_model.dart';
 import 'package:drive_or_drunk_app/models/review_model.dart';
 import 'package:drive_or_drunk_app/navigation_menu.dart';
@@ -32,6 +33,8 @@ class AppRoutes {
   static const String upsertEvent = '/upsertEvent';
   static const String chatpage = '/chatpage';
   static const String eventDetails = '/eventDetails';
+  static const String usersList = '/usersList';
+  static const String userProfile = '/userProfile';
 
   static const recoverPassword = '/recoverPassword';
 
@@ -101,6 +104,17 @@ class AppRoutes {
       case eventsMap:
         return authenticatedRoute(
             builder: (_) => const EventsMapPage(), routeName: eventsMap);
+      case usersList:
+        final String? query = settings.arguments as String?;
+        return authenticatedRoute(
+            builder: (_) => UsersListPage(
+                  nameQuery: query,
+                ),
+            routeName: usersList);
+      case userProfile:
+        final String userId = settings.arguments as String;
+        return authenticatedRoute(
+            builder: (_) => ProfilePage(owner: userId), routeName: userProfile);
       case upsertEvent:
         final event = settings.arguments as Event?;
         return authenticatedRoute(
