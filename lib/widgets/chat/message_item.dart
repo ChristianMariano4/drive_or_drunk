@@ -31,9 +31,14 @@ Widget buildMessageItem(BuildContext context, Message message,
                   Text(user2.name,
                       style: Theme.of(context).textTheme.labelMedium)
                 ],
-                ChatBubble(
-                    message: message.text,
-                    userNumber: message.sender == user1Ref ? 1 : 2),
+                Padding(
+                  padding: alignment == Alignment.centerRight
+                      ? const EdgeInsets.only(left: 125)
+                      : const EdgeInsets.only(right: 125),
+                  child: ChatBubble(
+                      message: message.text,
+                      userNumber: message.sender == user1Ref ? 1 : 2),
+                ),
                 Text(formattedDateTime,
                     style: Theme.of(context).textTheme.labelMedium)
               ])));

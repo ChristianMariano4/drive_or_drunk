@@ -4,6 +4,8 @@ class Collections {
   static const String events = 'Event';
   static const String reviews = 'Review';
   static const String users = 'User';
+  static const String rides = 'Ride';
+  static const String messages = 'Message';
 }
 
 class ConstantsText {

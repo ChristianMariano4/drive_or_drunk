@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart'
         Timestamp;
 import 'package:drive_or_drunk_app/core/constants/constants.dart'
     show Collections;
-import 'package:drive_or_drunk_app/models/user_model.dart';
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:rxdart/rxdart.dart';
 
@@ -46,7 +45,10 @@ class Message {
 }
 
 Future<void> setMessageSeen(String messageId, FirebaseFirestore db) async {
-  await db.collection('Messages').doc(messageId).update({'seen': true});
+  await db
+      .collection(Collections.messages)
+      .doc(messageId)
+      .update({'seen': true});
 }
 
 class Conversation {
@@ -190,7 +192,8 @@ Future<void> deleteConversation(String id, FirebaseFirestore db) async {
 Future<void> sendMessage(
     String conversationId, Message message, FirebaseFirestore db) async {
   // Add the message to the 'messages' collection and get its reference
-  final messageRef = await db.collection("Messages").add(message.toMap());
+  final messageRef =
+      await db.collection(Collections.messages).add(message.toMap());
 
   // Get the conversation
   final conversation = await getConversation(conversationId, db);

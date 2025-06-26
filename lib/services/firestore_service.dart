@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drive_or_drunk_app/models/booking_model.dart' as booking_model;
-import 'package:drive_or_drunk_app/models/booking_model.dart' show Booking;
+import 'package:drive_or_drunk_app/models/ride_model.dart' show Ride;
 import 'package:drive_or_drunk_app/models/conversation_model.dart'
     as conversation_model;
 import 'package:drive_or_drunk_app/models/conversation_model.dart'
@@ -9,6 +8,7 @@ import 'package:drive_or_drunk_app/models/event_model.dart' as event_model;
 import 'package:drive_or_drunk_app/models/event_model.dart' show Event;
 import 'package:drive_or_drunk_app/models/review_model.dart' as review_model;
 import 'package:drive_or_drunk_app/models/review_model.dart' show Review;
+import 'package:drive_or_drunk_app/models/ride_model.dart' as ride_model;
 import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/models/user_model.dart' show User;
 import 'package:flutter/material.dart';
@@ -135,35 +135,43 @@ class FirestoreService {
     return event_model.removeDrunkard(eventId, drunkardRef, _db);
   }
 
-// ==================== BOOKING METHODS ====================
-  Future<void> addBooking(Booking booking) async {
-    return booking_model.addBooking(booking, _db);
+// ==================== RIDE METHODS ====================
+  Future<void> addRide(Ride ride) async {
+    return ride_model.addRide(ride, _db);
   }
 
-  Future<Booking?> getBooking(String id) async {
-    return booking_model.getBooking(id, _db);
+  Future<Ride?> getRide(String id) async {
+    return ride_model.getRide(id, _db);
   }
 
-  Stream<List<Booking>> getBookings() {
-    return booking_model.getBookings(_db);
+  Stream<List<Ride>> getRidesByDriver(String userId) {
+    return ride_model.getRidesByDriver(userId, _db);
   }
 
-  Future<void> updateBooking(String id, Map<String, dynamic> data) async {
-    return booking_model.updateBooking(id, data, _db);
+  Stream<List<Ride>> getRidesByEvent(String eventId) {
+    return ride_model.getRidesByEvent(eventId, _db);
   }
 
-  Future<void> deleteBooking(String id) async {
-    return booking_model.deleteBooking(id, _db);
+  Stream<List<Ride>> getRidesByDrunkard(String userId) {
+    return ride_model.getRidesByDrunkard(userId, _db);
   }
 
-  Future<void> addDrunkardToBooking(
-      String bookingId, DocumentReference<User> drunkardRef) async {
-    return booking_model.addDrunkard(bookingId, drunkardRef, _db);
+  Future<void> updateRide(String id, Map<String, dynamic> data) async {
+    return ride_model.updateRide(id, data, _db);
   }
 
-  Future<void> removeDrunkardFromBooking(
-      String bookingId, DocumentReference<User> drunkardRef) async {
-    return booking_model.removeDrunkard(bookingId, drunkardRef, _db);
+  Future<void> deleteRide(String id) async {
+    return ride_model.deleteRide(id, _db);
+  }
+
+  Future<void> addDrunkardToRide(
+      String rideId, DocumentReference<User> drunkardRef) async {
+    return ride_model.addDrunkard(rideId, drunkardRef, _db);
+  }
+
+  Future<void> removeDrunkardFromRide(
+      String rideId, DocumentReference<User> drunkardRef) async {
+    return ride_model.removeDrunkard(rideId, drunkardRef, _db);
   }
 
 // ==================== CONVERSATION METHODS ====================
@@ -239,11 +247,6 @@ class FirestoreService {
 
   Future<void> deleteReview(String id) async {
     return review_model.deleteReview(id, _db);
-  }
-
-  Future<void> addCommentToReview(
-      String reviewId, review_model.Comment comment) async {
-    return review_model.addComment(reviewId, comment, _db);
   }
 
   Future<User> getAuthor(Review review) async {

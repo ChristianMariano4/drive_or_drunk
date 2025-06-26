@@ -117,40 +117,39 @@ class ChatPageState extends State<ChatPage> {
         ],
       ),
       body: Column(children: [
-        Expanded(
-            child: CustomStreamBuilder(
-                scrollController: scrollController,
-                stream: db.getMessageStream(conversationId!),
-                customListTileBuilder: (message) {
-                  return buildMessageItem(
-                      context, message, db, user1Ref!, user2!);
-                })),
+        Flexible(
+          child: CustomStreamBuilder(
+            stream: db.getMessageStream(conversationId!),
+            customListTileBuilder: (message) {
+              return buildMessageItem(context, message, db, user1Ref!, user2!);
+            },
+
+            isChat: true, // ← spazio per input + tastiera
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25, bottom: 10),
-          child: Row(children: [
-            Expanded(
-                child: CustomTextFormField(
-              controller: _messageController,
-              labelText: "Message...",
-              isChatForm: true,
-              sufIcon: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: FilledButton(
-                  onPressed: _sendMessage,
-                  style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      padding: const EdgeInsets.all(11)),
-                  child: const Icon(
-                    Icons.send_rounded,
-                    size: 30,
-                    color: AppColors.white,
-                  ),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+          child: CustomTextFormField(
+            controller: _messageController,
+            labelText: "Message...",
+            type: 1,
+            sufIcon: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: FilledButton(
+                onPressed: _sendMessage,
+                style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.all(11)),
+                child: const Icon(
+                  Icons.send_rounded,
+                  size: 27,
+                  color: AppColors.white,
                 ),
               ),
-            )),
-          ]),
+            ),
+          ),
         )
       ]),
     );
