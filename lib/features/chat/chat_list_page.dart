@@ -27,10 +27,10 @@ class ChatPageState extends State<ChatListPage> {
   @override
   void initState() {
     super.initState();
-    loadUserReference();
+    loadReferences();
   }
 
-  void loadUserReference() async {
+  void loadReferences() async {
     user1Ref = await db.getUserReference(widget.id) as DocumentReference;
     setState(() {
       isLoading = false;
@@ -68,10 +68,16 @@ class ChatPageState extends State<ChatListPage> {
       body: CustomStreamBuilder(
           stream: db.getConversations(user1Ref!),
           customListTileBuilder: (conversation) {
+            final DocumentReference? lastMsgRef =
+                (conversation.messageHistory ?? []).isNotEmpty
+                    ? conversation.messageHistory!.last
+                    : null;
             return CustomFutureBuilder(
               future: Future.wait([
                 conversation.user1.get(),
-                conversation.messageHistory.last.get(),
+                lastMsgRef != null
+                    ? lastMsgRef.get()
+                    : Future.value(), // If no messages, return null
                 db.countUnseenMessages(conversation, widget.id)
               ]),
               component: (data) {
@@ -79,10 +85,15 @@ class ChatPageState extends State<ChatListPage> {
                 final user1 = user_model.User.fromMap(
                     user1Snapshot.data() as Map<String, dynamic>,
                     user1Snapshot.id);
-                final messageSnapshot = data[1] as DocumentSnapshot;
-                final message = Message.fromMap(
-                    messageSnapshot.data() as Map<String, dynamic>,
-                    messageSnapshot.id);
+                final messageSnapshot =
+                    data[1] != null ? data[1] as DocumentSnapshot : null;
+                final message = messageSnapshot != null
+                    ? messageSnapshot.exists
+                        ? Message.fromMap(
+                            messageSnapshot.data() as Map<String, dynamic>,
+                            messageSnapshot.id)
+                        : null
+                    : null;
                 final unseenCount = data[2] as int;
                 return ConversationTile(
                   otheruser: user1.id == widget.id

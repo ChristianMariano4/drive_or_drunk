@@ -55,8 +55,8 @@ class Conversation {
   final String? id;
   final DocumentReference user1;
   final DocumentReference user2;
-  final List<DocumentReference> messageHistory;
-  final Timestamp lastMessageTimestamp;
+  final List<DocumentReference>? messageHistory;
+  final Timestamp? lastMessageTimestamp;
 
   Conversation(
       {this.id,
@@ -171,8 +171,16 @@ Stream<List<Conversation>> getConversations(
       final allConversations = [...user1List, ...user2List];
 
       // Ordina per timestamp decrescente (dal più recente al meno recente)
-      allConversations.sort(
-          (a, b) => b.lastMessageTimestamp.compareTo(a.lastMessageTimestamp));
+      allConversations.sort((a, b) {
+        final tsA = a.lastMessageTimestamp;
+        final tsB = b.lastMessageTimestamp;
+
+        if (tsA == null && tsB == null) return 0; // entrambi null → uguali
+        if (tsA == null) return 1; // a è null → va dopo
+        if (tsB == null) return -1; // b è null → va dopo
+
+        return tsB.compareTo(tsA);
+      });
 
       return allConversations;
     },
@@ -199,9 +207,9 @@ Future<void> sendMessage(
   final conversation = await getConversation(conversationId, db);
   if (conversation != null) {
     // Add the message reference to the messageHistory
-    final updatedHistory =
-        List<DocumentReference>.from(conversation.messageHistory)
-          ..add(messageRef);
+    final updatedHistory = List<DocumentReference>.from(
+      conversation.messageHistory ?? [],
+    )..add(messageRef);
     // Update the conversation with the new messageHistory
     await updateConversation(
       conversationId,
@@ -277,7 +285,10 @@ Future<int> countUnseenMessages(
     currentUser,
     db,
   );
-  for (final msgRef in conversation.messageHistory) {
+  if (conversation.messageHistory == null) {
+    return unseenCount;
+  }
+  for (final msgRef in conversation.messageHistory!) {
     final msgDoc = await msgRef.get();
     if (msgDoc.exists) {
       final msgData = msgDoc.data() as Map<String, dynamic>;
@@ -293,9 +304,9 @@ Future<int> countUnseenMessages(
 
 Future<Message?> getMostRecentMessageFromConversation(
     Conversation conversation, FirebaseFirestore db) async {
-  if (conversation.messageHistory.isEmpty) return null;
+  if (conversation.messageHistory == null) return null;
   final messages = await Future.wait(
-    conversation.messageHistory.map((ref) async {
+    conversation.messageHistory!.map((ref) async {
       final msgDoc = await ref.get();
       if (msgDoc.exists) {
         final msgData = msgDoc.data() as Map<String, dynamic>;

@@ -116,7 +116,8 @@ class ConversationTile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (message != null) ...[
+                            if (message != null &&
+                                message!.timestamp != null) ...[
                               Text(
                                 formatChatTimestamp(
                                     message!.timestamp!.toDate()),

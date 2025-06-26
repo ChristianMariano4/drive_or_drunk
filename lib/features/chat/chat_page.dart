@@ -116,7 +116,8 @@ class ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-      body: Column(children: [
+      body:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Flexible(
           child: CustomStreamBuilder(
             stream: db.getMessageStream(conversationId!),

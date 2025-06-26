@@ -44,6 +44,7 @@ class CustomStreamBuilder<T> extends StatelessWidget {
         }
 
         return ListView.builder(
+          shrinkWrap: true,
           itemCount: items.length,
           reverse: isChat ? true : false,
           itemBuilder: (context, index) {
