@@ -18,7 +18,6 @@ class FakeFirestoreService extends FirestoreService {
   Future<user_model.User> getAuthor(Review review) async => author;
 }
 
-void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     setupFirebaseCoreMocks();
