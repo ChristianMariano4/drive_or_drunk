@@ -4,6 +4,8 @@ import 'package:drive_or_drunk_app/models/user_model.dart' as user_model;
 import 'package:drive_or_drunk_app/services/firestore_service.dart';
 import 'package:drive_or_drunk_app/widgets/profile_ratingcard.dart';
 import 'package:drive_or_drunk_app/widgets/reviews_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,6 +29,11 @@ class FakeFirestoreService extends FirestoreService {
 }
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp();
+  });
   testWidgets('ProfileRatingcard shows message when no reviews', (tester) async {
     final owner = user_model.User(id: '1', name: 'Owner', username: 'o', email: 'o@a');
     final service = FakeFirestoreService(author: owner, reviews: []);
