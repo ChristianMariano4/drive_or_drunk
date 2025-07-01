@@ -9,7 +9,7 @@ import 'package:drive_or_drunk_app/widgets/star_rating.dart';
 import 'package:flutter/material.dart';
 
 class ProfileRatingcard extends StatelessWidget {
-  final FirestoreService db = FirestoreService();
+  final FirestoreService db;
   final user_model.User owner;
   final String reviewType;
 
@@ -17,7 +17,8 @@ class ProfileRatingcard extends StatelessWidget {
     super.key,
     required this.owner,
     required this.reviewType,
-  });
+    FirestoreService? db,
+  }) : db = db ?? FirestoreService();
 
   @override
   Widget build(BuildContext context) {
